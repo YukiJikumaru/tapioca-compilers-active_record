@@ -11,3 +11,7 @@ dsl:
   # exclude:
   # - SomeGeneratorName
   # workers: 5
+  outdir: sorbet/rbi/dsl2
+  only:
+    - Tapioca::Compilers::ActiveRecord
+  workers: 1
