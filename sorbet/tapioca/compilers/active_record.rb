@@ -38,144 +38,52 @@ module Tapioca
         root.create_path(constant) do |model|
           model_name = constant.name.to_s
 
+          # class Post < ::ApplicationRecord
+          #   include Post::GeneratedAttributeMethods
+          #   include Post::GeneratedAssociationMethods
+          #   # extend Post::CustomFinderMethods
+          #   extend Post::QueryMethodsReturningRelation
+          #
+          # class Post::ActiveRecord_Relation < ::ActiveRecord::Relation
+          #   include Post::ActiveRelation_WhereNot
+          #   # include Post::CustomFinderMethods
+          #   include Post::QueryMethodsReturningRelation
+          #
+          # class Post::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+          #   # include Post::CustomFinderMethods
+          #   include Post::QueryMethodsReturningAssociationRelation
+          #
+          # class Post::ActiveRecord_AssociationRelation < ::ActiveRecord::AssociationRelation
+          #   include Post::ActiveRelation_WhereNot
+          #   # include Post::CustomFinderMethods
+          #   include Post::QueryMethodsReturningAssociationRelation
+          #
+          # class Post::ActiveRecord_DisableJoinsAssociationRelation < ::ActiveRecord::DisableJoinsAssociationRelation
+          #   include Post::ActiveRelation_WhereNot
+          #   # include Post::CustomFinderMethods
+          #   include Post::QueryMethodsReturningAssociationRelation
+
           # Post::GeneratedAttributeMethods
           populate_generated_attribute_methods(model, constant)
-
           # Post::GeneratedAssociationMethods
           populate_generated_association_methods(model, constant)
-
           # Post::Internal__CustomFinderMethods
           populate_internal_custom_finder_methods(model, constant)
 
-          # [relation](http://api.rubyonrails.org/classes/ActiveRecord/Relation.html),
-          # [collection proxy](https://api.rubyonrails.org/classes/ActiveRecord/Associations/CollectionProxy.html),
-          # [query](http://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html),
-          # [spawn](http://api.rubyonrails.org/classes/ActiveRecord/SpawnMethods.html),
-          # [finder](http://api.rubyonrails.org/classes/ActiveRecord/FinderMethods.html), and
-          # [calculation](http://api.rubyonrails.org/classes/ActiveRecord/Calculations.html) methods.
+          # module Post::GeneratedRelationMethods
+          generated_relation_methods = create_generated_relation_methods_module(model, constant)
 
+          model.create_extend('GeneratedRelationMethods')
 
-          ##############################################################################################################
-          # Post::ActiveRecord_Relation                                                                                #
-          # Post::GeneratedRelationMethods                                                                             #
-          ##############################################################################################################
-          ar_relation = model.create_class('ActiveRecord_Relation', superclass_name: '::ActiveRecord::Relation')
-          generated_relation_methods = model.create_class('GeneratedRelationMethods', superclass_name: '::ActiveRecord::Relation')
-
-          ##############################################################################################################
-          # Post::ActiveRecord_AssociationRelation                                                                     #
-          ##############################################################################################################
-          association_relation = model.create_class('ActiveRecord_AssociationRelation', superclass_name: '::ActiveRecord::Relation')
-
-          # [relation](http://api.rubyonrails.org/classes/ActiveRecord/Relation.html)
-
-          # [collection proxy](https://api.rubyonrails.org/classes/ActiveRecord/Associations/CollectionProxy.html)
-
-          # [query](http://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html),
-          association_relation.create_method('and', parameters: [create_param('other', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('annotate', parameters: [create_rest_param('args', type: '::String')], return_type: T_SELF)
-          association_relation.create_method('async!', return_type: T_SELF)
-          association_relation.create_method('create_with', parameters: [create_param('other', type: T_UNTYPED)], return_type: model_name)
-          association_relation.create_method('distinct', parameters: [create_opt_param('value', type: 'T::Boolean', default: 'false')], return_type: T_SELF)
-          association_relation.create_method('eager_load', parameters: [create_rest_param('args', type: '::Symbol')], return_type: T_SELF)
-          association_relation.create_method('excluding', parameters: [create_rest_param('records', type: 'T::Enumerable[::ActiveRecord::Base]')], return_type: T_SELF)
-          association_relation.create_method('extending', parameters: [create_rest_param('modules', type: '::Module'), create_block_param('block', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('extract_associated', parameters: [create_param('association', type: '::Symbol')], return_type: T_SELF)
-          association_relation.create_method('from', parameters: [create_param('value', type: T_UNTYPED), create_opt_param('subquery_name', type: T_UNTYPED, default: 'nil')], return_type: T_SELF)
-          association_relation.create_method('group', parameters: [create_rest_param('args', type: 'T.any(::String, ::Symbol)')], return_type: T_SELF)
-          association_relation.create_method('having', parameters: [create_param('opts', type: '::String'), create_rest_param('rest', type: '::String')], return_type: T_SELF)
-          association_relation.create_method('in_order_of', parameters: [create_param('column', type: 'T.any(::String, ::Symbol)'), create_rest_param('values', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('includes', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('invert_where', return_type: T_SELF)
-          association_relation.create_method('joins', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('left_joins', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('left_outer_joins', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('limit', parameters: [create_param('value', type: '::Integer')], return_type: T_SELF)
-          association_relation.create_method('lock', parameters: [create_opt_param('locks', type: 'T::Boolean', default: 'true')], return_type: T_SELF)
-          association_relation.create_method('none', return_type: T_SELF)
-          association_relation.create_method('offset', parameters: [create_param('value', type: '::Integer')], return_type: T_SELF)
-          association_relation.create_method('optimizer_hints', parameters: [create_rest_param('args', type: '::String')], return_type: T_SELF)
-          association_relation.create_method('or', parameters: [create_param('other', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('order', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('preload', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('readonly', parameters: [create_opt_param('locks', type: 'T::Boolean', default: 'true')], return_type: T_SELF)
-          association_relation.create_method('references', parameters: [create_rest_param('table_names', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('regroup', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('reorder', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('reselect', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('reverse_order', return_type: T_SELF)
-          association_relation.create_method('rewhere', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('select', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('strict_loading', parameters: [create_opt_param('value', type: 'T::Boolean', default: 'true')], return_type: T_SELF)
-          association_relation.create_method('structurally_compatible?', parameters: [create_param('other', type: T_UNTYPED)], return_type: 'T::Boolean')
-          association_relation.create_method('uniq!', parameters: [create_param('name', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('unscope', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          # 引数ありの時と無しの時でreturn typeが異なる・・・
-          association_relation.create_method('where', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('with', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('without', parameters: [create_rest_param('records', type: T_UNTYPED)], return_type: T_SELF)
-
-          # [spawn](http://api.rubyonrails.org/classes/ActiveRecord/SpawnMethods.html)
-          association_relation.create_method('except', parameters: [create_rest_param('args', type: '::Symbol')], return_type: T_SELF)
-          association_relation.create_method('merge', parameters: [create_param('other', type: T_UNTYPED), create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('only', parameters: [create_rest_param('args', type: '::Symbol')], return_type: T_SELF)
-
-          # [finder](http://api.rubyonrails.org/classes/ActiveRecord/FinderMethods.html)
-          association_relation.create_method('exists?', parameters: [create_opt_param('conditions', type: T_UNTYPED, default: ':none')], return_type: 'T::Boolean')
-          association_relation.create_method('fifth', return_type: as_nilable_type(model_name))
-          association_relation.create_method('fifth!', return_type: model_name)
-          association_relation.create_method('find', parameters: [create_param('arg', type: T_UNTYPED)], return_type: model_name)
-          association_relation.create_method('find_by', parameters: [create_param('arg', type: T_UNTYPED), create_rest_param('args', type: T_UNTYPED)], return_type: as_nilable_type(model_name))
-          association_relation.create_method('find_by!', parameters: [create_param('arg', type: T_UNTYPED), create_rest_param('args', type: T_UNTYPED)], return_type: model_name)
-          association_relation.create_method('find_sole_by', parameters: [create_param('arg', type: T_UNTYPED), create_rest_param('args', type: T_UNTYPED)], return_type: model_name)
-          association_relation.create_method('first', return_type: as_nilable_type(model_name))
-          association_relation.create_method('first!', return_type: model_name)
-          association_relation.create_method('forty_two', return_type: as_nilable_type(model_name))
-          association_relation.create_method('forty_two!', return_type: model_name)
-          association_relation.create_method('fourth', return_type: as_nilable_type(model_name))
-          association_relation.create_method('fourth!', return_type: model_name)
-          association_relation.create_method('include?', parameters: [create_param('record', type: T_UNTYPED)], return_type: 'T::Boolean')
-          association_relation.create_method('last', return_type: as_nilable_type(model_name))
-          association_relation.create_method('last!', return_type: model_name)
-          association_relation.create_method('member?', parameters: [create_param('record', type: T_UNTYPED)], return_type: 'T::Boolean')
-          association_relation.create_method('second', return_type: as_nilable_type(model_name))
-          association_relation.create_method('second!', return_type: model_name)
-          association_relation.create_method('second_to_last', return_type: as_nilable_type(model_name))
-          association_relation.create_method('second_to_last!', return_type: model_name)
-          association_relation.create_method('sole', return_type: model_name)
-          association_relation.create_method('take', parameters: [create_opt_param('limit', type: '::Integer', default: 'nil')], return_type: "T::Array[#{model_name}]")
-          association_relation.create_method('take!', return_type: model_name)
-          association_relation.create_method('third', return_type: as_nilable_type(model_name))
-          association_relation.create_method('third!', return_type: model_name)
-          association_relation.create_method('third_to_last', return_type: as_nilable_type(model_name))
-          association_relation.create_method('third_to_last!', return_type: model_name)
-
-          # [calculation](http://api.rubyonrails.org/classes/ActiveRecord/Calculations.html)
-          association_relation.create_method('async_average', parameters: [create_param('column_name', type: '::String')], return_type: '::ActiveRecord::Promise')
-          association_relation.create_method('async_count', parameters: [create_opt_param('column_name', type: T_UNTYPED, default: 'nil')], return_type: '::ActiveRecord::Promise')
-          association_relation.create_method('async_ids', return_type: '::ActiveRecord::Promise')
-          association_relation.create_method('async_maximum', parameters: [create_param('column_name', type: T_UNTYPED)], return_type: '::ActiveRecord::Promise')
-          association_relation.create_method('async_minimum', parameters: [create_param('column_name', type: T_UNTYPED)], return_type: '::ActiveRecord::Promise')
-          association_relation.create_method('async_pick', parameters: [create_rest_param('column_names', type: T_UNTYPED)], return_type: '::ActiveRecord::Promise')
-          association_relation.create_method('async_pluck', parameters: [create_rest_param('column_names', type: T_UNTYPED)], return_type: '::ActiveRecord::Promise')
-          association_relation.create_method('async_sum', parameters: [create_opt_param('identity_or_column', type: T_UNTYPED, default: 'nil')], return_type: '::ActiveRecord::Promise')
-          association_relation.create_method('average', parameters: [create_param('column_name', type: 'T.any(::String, ::Symbol)')], return_type: '::Numeric')
-          association_relation.create_method('calculate', parameters: [create_param('operation', type: '::Symbol'), create_param('column_name', type: T_UNTYPED)], return_type: T_SELF)
-          association_relation.create_method('count', parameters: [create_opt_param('column_name', type: T_UNTYPED, default: 'nil')], return_type: '::Numeric')
-          association_relation.create_method('ids', return_type: 'T::Array[::Integer]')
-          association_relation.create_method('maximum', parameters: [create_param('column_name', type: T_UNTYPED)], return_type: '::Numeric')
-          association_relation.create_method('minimum', parameters: [create_param('column_name', type: T_UNTYPED)], return_type: '::Numeric')
-          association_relation.create_method('pick', parameters: [create_rest_param('column_names', type: T_UNTYPED)], return_type: T_UNTYPED)
-          association_relation.create_method('pluck', parameters: [create_rest_param('column_names', type: T_UNTYPED)], return_type: T_UNTYPED)
-          association_relation.create_method('sum', parameters: [create_opt_param('initial_value_or_column', type: '::Integer', default: '0')], return_type: T_SELF)
-
-
+          # class Post::ActiveRecord_Relation < ::ActiveRecord::Relation
+          create_active_record_relation(model, constant)
+          # class Post::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+          create_active_record_associations_collection_proxy(model, constant)
+          # class Post::ActiveRecord_AssociationRelation < ::ActiveRecord::AssociationRelation
+          create_active_record_association_relation(model, constant)
+          # class Post::ActiveRecord_DisableJoinsAssociationRelation < ::ActiveRecord::DisableJoinsAssociationRelation
+          create_active_record_disable_joins_association_relation(model, constant)
         end
-      end
-
-      # Post::ActiveRecord_AssociationRelation
-      sig { params(model: ::RBI::Scope, constant: ConstantType).void }
-      def populate_active_record_association_relation(model, constant)
       end
 
       # Post::GeneratedAttributeMethods
@@ -270,7 +178,6 @@ module Tapioca
         model.create_include("::#{model_name}::GeneratedAssociationMethods")
 
         activerecord_associations_collection_proxy_name = "::#{model_name}::ActiveRecord_Associations_CollectionProxy"
-        activerecord_associations_collection_proxy = model.create_class(activerecord_associations_collection_proxy_name, superclass_name: '::ActiveRecord::Relation')
 
         constant.reflections.each do |association_name, reflection|
           optional = reflection.options[:optional]
@@ -340,42 +247,100 @@ module Tapioca
         model_name = constant.name.to_s
         generated_association_methods = model.create_module("::#{model_name}::Internal__CustomFinderMethods")
         model.create_include("::#{model_name}::Internal__CustomFinderMethods")
+      end
 
+      # Post::GeneratedRelationMethods
+      sig { params(model: ::RBI::Scope, constant: ConstantType).returns(::RBI::Scope) }
+      def create_generated_relation_methods_module(model, constant)
+        model_name = constant.name.to_s
+        generated_association_methods = model.create_module('GeneratedRelationMethods')
 
+        populate_finder_methods(generated_association_methods, model_name)
+        populate_calculations(generated_association_methods)
+        activerecord_relation = 'ActiveRecord_Relation'
+        populate_spawn(generated_association_methods, activerecord_relation)
+        populate_query_methods(generated_association_methods, activerecord_relation)
+
+        generated_association_methods
+      end
+
+      # class Post::ActiveRecord_Relation < ::ActiveRecord::Relation
+      sig { params(model: ::RBI::Scope, constant: ConstantType).void }
+      def create_active_record_relation(model, constant)
+        ar_relation = model.create_class('ActiveRecord_Relation', superclass_name: '::ActiveRecord::Relation')
+        ar_relation.create_include('GeneratedRelationMethods')
+      end
+
+      # class Post::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+      sig { params(model: ::RBI::Scope, constant: ConstantType).void }
+      def create_active_record_associations_collection_proxy(model, constant)
+        collection_proxy = model.create_class('ActiveRecord_Associations_CollectionProxy', superclass_name: '::ActiveRecord::Associations::CollectionProxy')
+        collection_proxy.create_include('GeneratedRelationMethods')
+      end
+
+      # class Post::ActiveRecord_AssociationRelation < ::ActiveRecord::AssociationRelation
+      sig { params(model: ::RBI::Scope, constant: ConstantType).void }
+      def create_active_record_association_relation(model, constant)
+        association_relation = model.create_class('ActiveRecord_AssociationRelation', superclass_name: '::ActiveRecord::AssociationRelation')
+        association_relation.create_include('GeneratedRelationMethods')
+      end
+
+      # class Post::ActiveRecord_DisableJoinsAssociationRelation < ::ActiveRecord::DisableJoinsAssociationRelation
+      sig { params(model: ::RBI::Scope, constant: ConstantType).void }
+      def create_active_record_disable_joins_association_relation(model, constant)
+        disable_joins_association_relation = model.create_class('ActiveRecord_DisableJoinsAssociationRelation', superclass_name: '::ActiveRecord::DisableJoinsAssociationRelation')
+        disable_joins_association_relation.create_include('GeneratedRelationMethods')
+      end
+
+      private
+      ######################################################################################################################################################
+
+      sig { params(model: ::RBI::Scope, constant: ConstantType).void }
+      def populate_batches(model, constant)
+        # ::ActiveRecord::Relation include ::ActiveRecord::Batches
+
+        # def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: DEFAULT_ORDER, &block)
+        # def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: DEFAULT_ORDER)
+        # def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: DEFAULT_ORDER, use_ranges: nil, &block)
+      end
+
+      def populate_explain
+        # ::ActiveRecord::Relation include ::ActiveRecord::Explain
+        # NOP
       end
 
       # [finder](http://api.rubyonrails.org/classes/ActiveRecord/FinderMethods.html)
-      sig { params(generated_association_methods: ::RBI::Scope).void }
-      def populate_finder_methods(generated_association_methods)
+      sig { params(generated_association_methods: ::RBI::Scope, model_name: ::String).void }
+      def populate_finder_methods(generated_association_methods, model_name)
         # activerecord-7.1.1/lib/active_record/relation/finder_methods.rb
-        generated_association_methods.create_method('find', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_ATTACHED)
-        generated_association_methods.create_method('find_by', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('find_by!', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_ATTACHED)
-        generated_association_methods.create_method('take', parameters: [create_opt_param('limit', type: as_nilable_type('::Integer'), default: 'nil')], return_type: as_array(T_ATTACHED))
-        generated_association_methods.create_method('take!', return_type: T_ATTACHED)
-        generated_association_methods.create_method('sole', return_type: T_ATTACHED)
-        generated_association_methods.create_method('find_sole_by', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_ATTACHED)
-        generated_association_methods.create_method('first', return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('first!', return_type: T_ATTACHED)
-        generated_association_methods.create_method('last', return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('last!', return_type: T_ATTACHED)
-        generated_association_methods.create_method('second', return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('second!', return_type: T_ATTACHED)
-        generated_association_methods.create_method('third', return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('third!', return_type: T_ATTACHED)
-        generated_association_methods.create_method('fourth', return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('fourth!', return_type: T_ATTACHED)
-        generated_association_methods.create_method('fifth', return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('fifth!', return_type: T_ATTACHED)
-        generated_association_methods.create_method('forty_two', return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('forty_two!', return_type: T_ATTACHED)
-        generated_association_methods.create_method('third_to_last', return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('third_to_last!', return_type: T_ATTACHED)
-        generated_association_methods.create_method('second_to_last', return_type: as_nilable_type(T_ATTACHED))
-        generated_association_methods.create_method('second_to_last!', return_type: T_ATTACHED)
+        generated_association_methods.create_method('find', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: model_name)
+        generated_association_methods.create_method('find_by', parameters: [create_param('arg', type: T_UNTYPED), create_rest_param('args', type: T_UNTYPED)], return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('find_by!', parameters: [create_param('arg', type: T_UNTYPED), create_rest_param('args', type: T_UNTYPED)], return_type: model_name)
+        generated_association_methods.create_method('take', parameters: [create_opt_param('limit', type: as_nilable_type('::Integer'), default: 'nil')], return_type: as_array(model_name))
+        generated_association_methods.create_method('take!', return_type: model_name)
+        generated_association_methods.create_method('sole', return_type: model_name)
+        generated_association_methods.create_method('find_sole_by', parameters: [create_param('arg', type: T_UNTYPED), create_rest_param('args', type: T_UNTYPED)], return_type: model_name)
+        generated_association_methods.create_method('first', return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('first!', return_type: model_name)
+        generated_association_methods.create_method('last', return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('last!', return_type: model_name)
+        generated_association_methods.create_method('second', return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('second!', return_type: model_name)
+        generated_association_methods.create_method('third', return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('third!', return_type: model_name)
+        generated_association_methods.create_method('fourth', return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('fourth!', return_type: model_name)
+        generated_association_methods.create_method('fifth', return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('fifth!', return_type: model_name)
+        generated_association_methods.create_method('forty_two', return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('forty_two!', return_type: model_name)
+        generated_association_methods.create_method('third_to_last', return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('third_to_last!', return_type: model_name)
+        generated_association_methods.create_method('second_to_last', return_type: as_nilable_type(model_name))
+        generated_association_methods.create_method('second_to_last!', return_type: model_name)
         generated_association_methods.create_method('exists?', parameters: [create_opt_param('args', type: T_UNTYPED, default: ':none')], return_type: T_BOOLEAN)
-        generated_association_methods.create_method('include?', parameters: [create_param('record', type: as_nilable_type(T_ATTACHED))], return_type: T_BOOLEAN)
-        generated_association_methods.create_method('member?', parameters: [create_param('record', type: as_nilable_type(T_ATTACHED))], return_type: T_BOOLEAN)
+        generated_association_methods.create_method('include?', parameters: [create_param('record', type: as_nilable_type(model_name))], return_type: T_BOOLEAN)
+        generated_association_methods.create_method('member?', parameters: [create_param('record', type: as_nilable_type(model_name))], return_type: T_BOOLEAN)
       end
 
       # [calculation](http://api.rubyonrails.org/classes/ActiveRecord/Calculations.html)
@@ -417,22 +382,23 @@ module Tapioca
         # activerecord-7.1.1/lib/active_record/relation/query_methods.rb
         common_type = 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])'
 
-        generated_association_methods.create_method('includes', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('includes', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
         generated_association_methods.create_method('eager_load', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
-        generated_association_methods.create_method('preload', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('preload', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
         generated_association_methods.create_method('extract_associated', parameters: [create_param('association', type: '::Symbol')], return_type: as_array(T_UNTYPED))
-        generated_association_methods.create_method('references', parameters: [create_rest_param('table_names', type: common_type)], return_type: activerecord_relation)
-        generated_association_methods.create_method('select', parameters: [create_rest_param('fields', type: common_type)], return_type: activerecord_relation)
-        generated_association_methods.create_method('with', parameters: [create_rest_param('args', type: 'T::Hash[T.untyped, T.untyped]')], return_type: activerecord_relation)
-        generated_association_methods.create_method('reselect', parameters: [create_rest_param('fields', type: common_type)], return_type: activerecord_relation)
-        generated_association_methods.create_method('group', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
-        generated_association_methods.create_method('order', parameters: [create_rest_param('args', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])')], return_type: activerecord_relation)
+        generated_association_methods.create_method('references', parameters: [create_param('arg', type: common_type), create_rest_param('table_names', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('select', parameters: [create_param('field', type: common_type), create_rest_param('fields', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('with', parameters: [create_param('arg', type: 'T::Hash[T.untyped, T.untyped]'), create_rest_param('args', type: 'T::Hash[T.untyped, T.untyped]')], return_type: activerecord_relation)
+        generated_association_methods.create_method('reselect', parameters: [create_param('arg', type: common_type), create_rest_param('fields', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('group', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('regroup', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('order', parameters: [create_param('arg', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])'), create_rest_param('args', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])')], return_type: activerecord_relation)
         generated_association_methods.create_method('in_order_of', parameters: [create_param('column', type: as_any('::String', '::Symbol')), create_param('values', type: T_UNTYPED)], return_type: activerecord_relation)
-        generated_association_methods.create_method('reorder', parameters: [create_rest_param('args', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])')], return_type: activerecord_relation)
+        generated_association_methods.create_method('reorder', parameters: [create_param('arg', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])'), create_rest_param('args', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])')], return_type: activerecord_relation)
         generated_association_methods.create_method('unscope', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
-        generated_association_methods.create_method('joins', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
-        generated_association_methods.create_method('left_outer_joins', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
-        generated_association_methods.create_method('left_joins', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('joins', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('left_outer_joins', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
+        generated_association_methods.create_method('left_joins', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
         # If no argument is passed, where returns a new instance of WhereChain, that can be chained with WhereChain#not, WhereChain#missing, or WhereChain#associated.
         generated_association_methods.create_method('where', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: activerecord_relation)
         generated_association_methods.create_method('rewhere', parameters: [create_param('conditions', type: T_UNTYPED)], return_type: activerecord_relation)
@@ -457,20 +423,6 @@ module Tapioca
         generated_association_methods.create_method('uniq!', parameters: [create_param('name', type: T_UNTYPED)], return_type: activerecord_relation)
         generated_association_methods.create_method('excluding', parameters: [create_rest_param('records', type: 'T::Enumerable[::ActiveRecord::Base]')], return_type: activerecord_relation)
         generated_association_methods.create_method('without', parameters: [create_rest_param('records', type: 'T::Enumerable[::ActiveRecord::Base]')], return_type: activerecord_relation)
-      end
-
-      def populate_batches
-        # ::ActiveRecord::Relation include ::ActiveRecord::Batches
-
-        # def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: DEFAULT_ORDER, &block)
-        # def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: DEFAULT_ORDER)
-        # def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: DEFAULT_ORDER, use_ranges: nil, &block)
-      end
-
-      def populate_explain
-        # ::ActiveRecord::Relation include ::ActiveRecord::Explain
-
-        # NOP
       end
 
       sig { params(column_type: T.untyped).returns(String) }

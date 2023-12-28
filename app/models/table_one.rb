@@ -19,7 +19,7 @@ class TableOne < ApplicationRecord
   scope :test4, -> { [] }
   scope :test5, -> { :noooo }
   scope :test6, ->(arg1) { where(id: arg1) }
-  scope :test7, ->(arg1, arg2) { where(id: arg1).or.where(id: arg2) }
+  scope :test7, ->(arg1, arg2) { where(id: arg1).or(where(id: arg2)) }
 
 
   class Hoge

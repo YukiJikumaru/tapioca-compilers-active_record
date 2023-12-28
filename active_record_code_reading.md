@@ -959,10 +959,10 @@ end
 
 
 
-Post::ActiveRecord_Relation
-Post::ActiveRecord_Associations_CollectionProxy
-Post::ActiveRecord_AssociationRelation
-Post::ActiveRecord_DisableJoinsAssociationRelation
+Post::ActiveRecord_Relation extends (ActiveRecord::Relation include GeneratedRelationMethods)
+Post::ActiveRecord_Associations_CollectionProxy extends (ActiveRecord::Associations::CollectionProxy include GeneratedRelationMethods)
+Post::ActiveRecord_AssociationRelation extends (ActiveRecord::AssociationRelation include GeneratedRelationMethods)
+Post::ActiveRecord_DisableJoinsAssociationRelation extends (ActiveRecord::DisableJoinsAssociationRelation include GeneratedRelationMethods)
 
 
 

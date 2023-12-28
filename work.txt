@@ -1,524 +1,44 @@
 # [sorbet-rails](https://github.com/chanzuckerberg/sorbet-rails)
 
-class Post < ApplicationRecord
+class Post < ::ApplicationRecord
   include Post::GeneratedAttributeMethods
   include Post::GeneratedAssociationMethods
-  extend Post::CustomFinderMethods
+  # extend Post::CustomFinderMethods
   extend Post::QueryMethodsReturningRelation
 
-class Post::ActiveRecord_Relation < ActiveRecord::Relation
+class Post::ActiveRecord_Relation < ::ActiveRecord::Relation
   include Post::ActiveRelation_WhereNot
-  include Post::CustomFinderMethods
+  # include Post::CustomFinderMethods
   include Post::QueryMethodsReturningRelation
 
-class Post::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include Post::ActiveRelation_WhereNot
-  include Post::CustomFinderMethods
+class Post::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+  # include Post::CustomFinderMethods
   include Post::QueryMethodsReturningAssociationRelation
 
-class Post::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Post::CustomFinderMethods
+class Post::ActiveRecord_AssociationRelation < ::ActiveRecord::AssociationRelation
+  include Post::ActiveRelation_WhereNot
+  # include Post::CustomFinderMethods
   include Post::QueryMethodsReturningAssociationRelation
+
+class Post::ActiveRecord_DisableJoinsAssociationRelation < ::ActiveRecord::DisableJoinsAssociationRelation
+  include Post::ActiveRelation_WhereNot
+  # include Post::CustomFinderMethods
+  include Post::QueryMethodsReturningAssociationRelation
+
+include GeneratedRelationMethods
 
 # ActiveRecordに生えてくるの
 
-- [x] Post::GeneratedAttributeMethods 重要
-- [x] Post::GeneratedAssociationMethods 重要
-- [ ] Post::ActiveRecord_Relation 重要
-- [ ] Post::ActiveRecord_AssociationRelation
-- [ ] Post::ActiveRecord_DisableJoinsAssociationRelation
-- [ ] Post::ActiveRecord_Associations_CollectionProxy
+Post::ActiveRecord_Relation < ActiveRecord::Relation
+  include GeneratedRelationMethods
+Post::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include GeneratedRelationMethods
+Post::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include GeneratedRelationMethods
+Post::ActiveRecord_DisableJoinsAssociationRelation < ActiveRecord::DisableJoinsAssociationRelation
+  include GeneratedRelationMethods
 
 
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-# Post::GeneratedAttributeMethods
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-Post.const_get(:GeneratedAttributeMethods).instance_methods
-
-[:author_id,
- :author_id=,
- :author_id?,
- :author_id_before_last_save,
- :author_id_before_type_cast,
- :author_id_came_from_user?,
- :author_id_change,
- :author_id_change_to_be_saved,
- :author_id_changed?,
- :author_id_for_database,
- :author_id_in_database,
- :author_id_previous_change,
- :author_id_previously_changed?,
- :author_id_previously_was,
- :author_id_was,
- :author_id_will_change!,
- :clear_author_id_change,
- :clear_content_change,
- :clear_created_at_change,
- :clear_id_change,
- :clear_id_value_change,
- :clear_title_change,
- :clear_updated_at_change,
- :content,
- :content=,
- :content?,
- :content_before_last_save,
- :content_before_type_cast,
- :content_came_from_user?,
- :content_change,
- :content_change_to_be_saved,
- :content_changed?,
- :content_for_database,
- :content_in_database,
- :content_previous_change,
- :content_previously_changed?,
- :content_previously_was,
- :content_was,
- :content_will_change!,
- :created_at,
- :created_at=,
- :created_at?,
- :created_at_before_last_save,
- :created_at_before_type_cast,
- :created_at_came_from_user?,
- :created_at_change,
- :created_at_change_to_be_saved,
- :created_at_changed?,
- :created_at_for_database,
- :created_at_in_database,
- :created_at_previous_change,
- :created_at_previously_changed?,
- :created_at_previously_was,
- :created_at_was,
- :created_at_will_change!,
- :id_before_last_save,
- :id_came_from_user?,
- :id_change,
- :id_change_to_be_saved,
- :id_changed?,
- :id_previous_change,
- :id_previously_changed?,
- :id_previously_was,
- :id_value,
- :id_value=,
- :id_value?,
- :id_value_before_last_save,
- :id_value_before_type_cast,
- :id_value_came_from_user?,
- :id_value_change,
- :id_value_change_to_be_saved,
- :id_value_changed?,
- :id_value_for_database,
- :id_value_in_database,
- :id_value_previous_change,
- :id_value_previously_changed?,
- :id_value_previously_was,
- :id_value_was,
- :id_value_will_change!,
- :id_will_change!,
- :restore_author_id!,
- :restore_content!,
- :restore_created_at!,
- :restore_id!,
- :restore_id_value!,
- :restore_title!,
- :restore_updated_at!,
- :saved_change_to_author_id,
- :saved_change_to_author_id?,
- :saved_change_to_content,
- :saved_change_to_content?,
- :saved_change_to_created_at,
- :saved_change_to_created_at?,
- :saved_change_to_id,
- :saved_change_to_id?,
- :saved_change_to_id_value,
- :saved_change_to_id_value?,
- :saved_change_to_title,
- :saved_change_to_title?,
- :saved_change_to_updated_at,
- :saved_change_to_updated_at?,
- :title,
- :title=,
- :title?,
- :title_before_last_save,
- :title_before_type_cast,
- :title_came_from_user?,
- :title_change,
- :title_change_to_be_saved,
- :title_changed?,
- :title_for_database,
- :title_in_database,
- :title_previous_change,
- :title_previously_changed?,
- :title_previously_was,
- :title_was,
- :title_will_change!,
- :updated_at,
- :updated_at=,
- :updated_at?,
- :updated_at_before_last_save,
- :updated_at_before_type_cast,
- :updated_at_came_from_user?,
- :updated_at_change,
- :updated_at_change_to_be_saved,
- :updated_at_changed?,
- :updated_at_for_database,
- :updated_at_in_database,
- :updated_at_previous_change,
- :updated_at_previously_changed?,
- :updated_at_previously_was,
- :updated_at_was,
- :updated_at_will_change!,
- :will_save_change_to_author_id?,
- :will_save_change_to_content?,
- :will_save_change_to_created_at?,
- :will_save_change_to_id?,
- :will_save_change_to_id_value?,
- :will_save_change_to_title?,
- :will_save_change_to_updated_at?]
-
- irb(main):013> Post.const_get(:GeneratedAttributeMethods).instance_methods(true).grep /author/
-=>
-[:author_id,
- :author_id=,
- :author_id_before_type_cast,
- :author_id_came_from_user?,
- :author_id?,
- :author_id_changed?,
- :author_id_change,
- :author_id_for_database,
- :author_id_was,
- :author_id_previous_change,
- :author_id_previously_changed?,
- :restore_author_id!,
- :clear_author_id_change,
- :author_id_will_change!,
- :saved_change_to_author_id,
- :author_id_before_last_save,
- :author_id_previously_was,
- :author_id_change_to_be_saved,
- :author_id_in_database,
- :saved_change_to_author_id?,
- :will_save_change_to_author_id?]
-irb(main):014> Post.const_get(:GeneratedAttributeMethods).instance_methods(true).grep(/author/).size
-=> 21
-
-  ActiveModel::AttributeMethods vendor/bundle/ruby/3.0.0/gems/activemodel-7.1.1/lib/active_model/attribute_methods.rb
-  ------------------------------
-  %s
-  %s=
-  %s?
-  ActiveRecord::AttributeMethods::Dirty vendor/bundle/ruby/3.0.0/gems/activerecord-7.1.1/lib/active_record/attribute_methods/dirty.rb
-  ------------------------------
-  saved_change_to_%s?
-  saved_change_to_%s
-  %s_before_last_save
-  will_save_change_to_%s?
-  %s_change_to_be_saved
-  %s_in_database
-  ActiveModel::Dirty vendor/bundle/ruby/3.0.0/gems/activemodel-7.1.1/lib/active_model/dirty.rb
-  ------------------------------
-  %s_previously_changed?
-  %s_changed?
-  %s_change
-  %s_will_change!
-  %s_was
-  %s_previous_change
-  %s_previously_was
-  restore_%s!
-  clear_%s_change
-  ActiveRecord::AttributeMethods::BeforeTypeCast vendor/bundle/ruby/3.0.0/gems/activerecord-7.1.1/lib/active_record/attribute_methods/before_type_cast.rb
-  ------------------------------
-  %s_before_type_cast
-  %s_for_database
-  %s_came_from_user?
-
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-# Post::GeneratedAssociationMethods
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-Post.const_get(:GeneratedAssociationMethods).instance_methods
-
-class Post < ApplicationRecord
-  belongs_to :author, optional: true
-  has_many :post_tag_relations
-  has_many :tags, through: :post_tag_relations
-
----------------------------------------------------
-[:author,
- :author=,
- :author_changed?,
- :author_previously_changed?,
- :build_author,
- :create_author,
- :create_author!,
- :post_tag_relation_ids,
- :post_tag_relation_ids=,
- :post_tag_relations,
- :post_tag_relations=,
- :reload_author,
- :reset_author,
- :tag_ids,
- :tag_ids=,
- :tags,
- :tags=]
-
-irb(main):017> Post.const_get(:GeneratedAssociationMethods).instance_methods.grep /author/
-=> [:create_author, :create_author!, :reload_author, :reset_author, :author_changed?, :author_previously_changed?, :author=, :author, :build_author]
-irb(main):018> Post.const_get(:GeneratedAssociationMethods).instance_methods.grep(/author/).size
-=> 9
-
-::ActiveRecord::Base includes ::ActiveRecord::Associations
-  author tags post_tag_relations
-  vendor/bundle/ruby/3.0.0/gems/activerecord-7.1.1/lib/active_record/associations/builder/association.rb
-
-  author_changed? author_previously_changed?
-  vendor/bundle/ruby/3.0.0/gems/activerecord-7.1.1/lib/active_record/associations/builder/belongs_to.rb
-
-  build_author create_author create_author! reload_author reset_author
-  vendor/bundle/ruby/3.0.0/gems/activerecord-7.1.1/lib/active_record/associations/builder/singular_association.rb
-
-  tag_ids post_tag_relation_ids post_tag_relation_ids=
-  vendor/bundle/ruby/3.0.0/gems/activerecord-7.1.1/lib/active_record/associations/builder/collection_association.rb
-
-
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-# Post::ActiveRecord_DisableJoinsAssociationRelation
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-
-Post.const_get(:ActiveRecord_DisableJoinsAssociationRelation)
-
-?????????????????????????????????????
-
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-# Post::ActiveRecord_AssociationRelation
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-
-Post.const_get(:ActiveRecord_AssociationRelation)
-
-?????????????????????????????????????
-
-
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-# Post::ActiveRecord_Associations_CollectionProxy
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-
-Post.const_get(:ActiveRecord_Associations_CollectionProxy)
-
-????????????????????????????????????????????????
-
-
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-# Post::ActiveRecord_Relation
-##################################################################################################################################################################################################################
-##################################################################################################################################################################################################################
-
-Post.const_get(:ActiveRecord_Relation)
-
-?????????????????????????????????????????????????
-
-
-----------------------------------
-
-RBI
-
-
-model.create_extend('NameOfExtended')
-
-# Declaration of Module
-
-```
-
-```
-
-# Declaration of Class
-
-```
-scope.create_class('NameOfBaseClass')
-scope.create_class('NameOfChildClass', superclass_name: 'NameOfSuperClass')
-
-scope.create_class('NameOfBaseClass') do ||
-end
-```
-
-
-
-
-
-
-
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-# Tapioca RBI Extension API
-
-tapioca-0.11.9/lib/tapioca/rbi_ext/model.rb
-
-## Decalare a Module
-
-```
-sig { params(name: String, block: T.nilable(T.proc.params(scope: Scope).void)).returns(Scope) }
-def create_module(name, &block)
-```
-
-```
-module Spam
-  def hello(your_name)
-    "hello #{your_name}"
-  end
-end
-
-module Spam
-  # Return a greeting to your_name
-  sig { params(your_name: ::String).returns(::String) }
-  def hello(your_name); end
-end
-
-mod = scope.create_module('Spam')
-mod.create_method(
-  'hello',
-  parameters: [create_param('your_name', type: '::String')],
-  return_type: '::String',
-  class_method: false,
-  visibility: RBI::Public.new,
-  comments: [RBI::Comment.new('Return a greeting to your_name')]
-)
-```
-
-## Decalare a Class
-
-```
-sig do
-  params(
-    name: String,
-    superclass_name: T.nilable(String),
-    block: T.nilable(T.proc.params(scope: RBI::Scope).void),
-  ).returns(Scope)
-end
-def create_class(name, superclass_name: nil, &block)
-```
-
-## Decalare a Constant
-
-```
-sig { params(name: String, value: String).void }
-def create_constant(name, value:)
-```
-
-## Decalare include
-
-```
-sig { params(name: String).void }
-def create_include(name)
-```
-
-## Decalare extend
-
-```
-sig { params(name: String).void }
-def create_extend(name)
-```
-
-## --
-
-```
-sig { params(name: String).void }
-def create_mixes_in_class_methods(name)
-```
-
-## Decalare a variable
-
-```
-sig do
-  params(
-    name: String,
-    type: String,
-    variance: Symbol,
-    fixed: T.nilable(String),
-    upper: T.nilable(String),
-    lower: T.nilable(String),
-  ).void
-end
-def create_type_variable(name, type:, variance: :invariant, fixed: nil, upper: nil, lower: nil)
-```
-
-## Decalare a Method
-
-```
-sig do
-  params(
-    name: String,
-    parameters: T::Array[TypedParam],
-    return_type: String,
-    class_method: T::Boolean,
-    visibility: RBI::Visibility,
-    comments: T::Array[RBI::Comment],
-  ).void
-end
-def create_method(name, parameters: [], return_type: "T.untyped", class_method: false, visibility: RBI::Public.new,
-  comments: [])
-```
-
-### An Argument
-
-```
-def twice(num)
-  num * 2
-end
-
-sig { params(num: ::Integer).returns(::Integer) }
-def twice(num); end
-
-scope.create_method('twice', parameters: [create_param('num', type: '::Integer')], return_type: '::Integer')
-```
-
-### Rest parameters
-
-```
-def sum(*nums)
-  nums.sum
-end
-
-sig { params(nums: ::Integer).returns(::Integer) }
-def sum(*nums); end
-
-scope.create_method('sum', parameters: [create_rest_param('nums', type: '::Integer')], return_type: '::Integer')
-```
-
-### Block parameters
-
-
-
-
-
-### Keyword Arguments
-
-sig { params(name: String, type: String).returns(RBI::TypedParam) }
-def create_kw_param(name, type:)
-  create_typed_param(RBI::KwParam.new(name), type)
-end
-
-sig { params(name: String, type: String, default: String).returns(RBI::TypedParam) }
-def create_kw_opt_param(name, type:, default:)
-  create_typed_param(RBI::KwOptParam.new(name, default), type)
-end
-
-sig { params(name: String, type: String).returns(RBI::TypedParam) }
-def create_kw_rest_param(name, type:)
-  create_typed_param(RBI::KwRestParam.new(name), type)
-end
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -547,4 +67,50 @@ sig { params(limit: T.nilable(::Integer)).returns(T.any(T.attached_class, T::Arr
 
 
 
-
+activerecord-7.1.1/lib/active_record/relation.rb
+def new(attributes = nil, &block)
+alias build new
+def create(attributes = nil, &block)
+def create!(attributes = nil, &block)
+def find_or_create_by(attributes, &block)
+def find_or_create_by!(attributes, &block)
+def create_or_find_by(attributes, &block)
+def create_or_find_by!(attributes, &block)
+def find_or_initialize_by(attributes, &block)
+def explain(*options)
+def to_ary
+alias to_a to_ary
+def encode_with(coder)
+def size
+def empty?
+def none?(*args)
+def any?(*args)
+def one?(*args)
+def many?
+def cache_key(timestamp_column = "updated_at")
+def cache_version(timestamp_column = :updated_at)
+def cache_key_with_version
+def scoping(all_queries: nil, &block)
+def update_all(updates)
+def update(id = :all, attributes) # :nodoc:
+def update!(id = :all, attributes) # :nodoc:
+def update_counters(counters)
+def touch_all(*names, time: nil)
+def destroy_all
+def delete_all
+def destroy_by(*args)
+def delete_by(*args)
+def load_async
+def scheduled?
+def load(&block)
+def reload
+def reset
+def to_sql
+def scope_for_create
+def eager_loading?
+def joined_includes_values
+def ==(other)
+def pretty_print(pp)
+def blank?
+def values
+def inspect
