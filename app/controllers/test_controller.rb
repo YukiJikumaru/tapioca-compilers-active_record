@@ -1,5 +1,7 @@
 # typed: true
 class TestController < ApplicationController
+  extend T::Sig
+
   def index
     # NG
     x = TableOne.find(1)
@@ -17,6 +19,17 @@ class TestController < ApplicationController
       x.title_previously_changed?(from: nil)
     end
 
+    ActiveRecord::Promise
 
+    x = Post.find(1)
+    x = Post.find_by(id: 1)
+
+
+
+    hoge(:a, b: [], c: { d: { e: { f: { g: [123] } } }  })
+  end
+
+  sig { params(args: T.any(::Symbol, T::Hash[::Symbol, T.any(::Symbol, T::Array[::Symbol], T::Hash[::Symbol, T.any(::Symbol, T::Array[::Symbol])])])).void }
+  def hoge(*args)
   end
 end

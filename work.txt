@@ -1,65 +1,24 @@
-jiku@DESKTOP-K0IFAJD:~/tapioca-compilers-active_record$ ls -l vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_*
+# [sorbet-rails](https://github.com/chanzuckerberg/sorbet-rails)
 
-必須
-vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_columns.rb
-vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_relations.rb
-vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_associations.rb
-vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_scope.rb
+class Post < ApplicationRecord
+  include Post::GeneratedAttributeMethods
+  include Post::GeneratedAssociationMethods
+  extend Post::CustomFinderMethods
+  extend Post::QueryMethodsReturningRelation
 
-後回し
-vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_enum.rb
-vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_delegated_types.rb
-vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_secure_token.rb
+class Post::ActiveRecord_Relation < ActiveRecord::Relation
+  include Post::ActiveRelation_WhereNot
+  include Post::CustomFinderMethods
+  include Post::QueryMethodsReturningRelation
 
-外部ライブラリ
-vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_typed_store.rb
-vendor/bundle/ruby/3.0.0/gems/tapioca-0.11.9/lib/tapioca/dsl/compilers/active_record_fixtures.rb
+class Post::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
+  include Post::ActiveRelation_WhereNot
+  include Post::CustomFinderMethods
+  include Post::QueryMethodsReturningAssociationRelation
 
-https://railsguides.jp/active_record_querying.html
-
-- ActiveRecord
-  - attributes ::TableOne::GeneratedAttributeMethods に定義して ::TableOne にincludeする
-  - scope  ::TableOne::GeneratedRelationMethods に定義して ::TableOne にincludeする
-    - 基本機能
-      - 引数
-      - 返り値
-    - default_scope 型には関係ない
-    - unscoped 型には関係ない
-    - 条件文 これは不可能か
-  - 動的検索 Customer.find_by_first_name_and_orders_count("Ryan", 5)
-    - これはむりだ
-  - enum
-
-# sorbet-rails
-
-class Site < ApplicationRecord
-  include Site::GeneratedAttributeMethods
-  include Site::GeneratedAssociationMethods
-  extend Site::CustomFinderMethods
-  extend Site::QueryMethodsReturningRelation
-
-class Site::ActiveRecord_Relation < ActiveRecord::Relation
-  include Site::ActiveRelation_WhereNot
-  include Site::CustomFinderMethods
-  include Site::QueryMethodsReturningRelation
-
-class Site::ActiveRecord_AssociationRelation < ActiveRecord::AssociationRelation
-  include Site::ActiveRelation_WhereNot
-  include Site::CustomFinderMethods
-  include Site::QueryMethodsReturningAssociationRelation
-
-class Site::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
-  include Site::CustomFinderMethods
-  include Site::QueryMethodsReturningAssociationRelation
-
-        # これはいらないか？
-        module Site::CustomFinderMethods
-          def first_n(limit); end
-          def last_n(limit); end
-          def find_n(*args); end
-          def find_by_id(id); end
-          def find_by_id!(id); end
-        end
+class Post::ActiveRecord_Associations_CollectionProxy < ActiveRecord::Associations::CollectionProxy
+  include Post::CustomFinderMethods
+  include Post::QueryMethodsReturningAssociationRelation
 
 # ActiveRecordに生えてくるの
 
@@ -560,4 +519,32 @@ def create_kw_rest_param(name, type:)
 end
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+https://api.rubyonrails.org/classes/ActiveRecord/FinderMethods.html#method-i-find
+ActiveRecord::Base#find(*args)
+sig { params(args: T.untyped).returns(T.attached_class) }
+sig { params(args: T.untyped).returns(T.any(T.attached_class, T::Array[T.attached_class])) }
+sig { params(args: T.any(::Integer, ::String, T::Array[T.any(::Integer, ::String)])).returns(T.any(T.attached_class, T::Array[T.attached_class])) }
+
+https://api.rubyonrails.org/classes/ActiveRecord/FinderMethods.html#method-i-first
+ActiveRecord::Base#first(limit = nil)
+sig { returns(T.attached_class) }
+sig { params(limit: T.nilable(::Integer)).returns(T.any(T.attached_class, T::Array[T.attached_class])) }
+
+https://api.rubyonrails.org/classes/ActiveRecord/FinderMethods.html#method-i-last
+ActiveRecord::Base#last(limit = nil)
+sig { returns(T.attached_class) }
+sig { params(limit: T.nilable(::Integer)).returns(T.any(T.attached_class, T::Array[T.attached_class])) }
+
+
+
 

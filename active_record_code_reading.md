@@ -920,3 +920,49 @@ class Hoge
   end
 end
 ```
+
+
+
+
+class GeneratedRelationMethods < Module # :nodoc:
+  include Mutex_m
+
+  def generate_method(method) 🎂🍩🍰🧁🍨
+    synchronize do
+      return if method_defined?(method)
+
+      if /\A[a-zA-Z_]\w*[!?]?\z/.match?(method) && !DELEGATION_RESERVED_METHOD_NAMES.include?(method.to_s)
+        module_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def #{method}(...)
+            scoping { klass.#{method}(...) }
+          end
+        RUBY
+      else
+        define_method(method) do |*args, &block|
+          scoping { klass.public_send(method, *args, &block) }
+        end
+        ruby2_keywords(method)
+      end
+    end
+  end
+end
+
+[
+  ActiveRecord::Relation,
+  ActiveRecord::Associations::CollectionProxy,
+  ActiveRecord::AssociationRelation,
+  ActiveRecord::DisableJoinsAssociationRelation,
+].each do |klass|
+  delegate = Class.new(klass) { include ClassSpecificRelation }
+  delegate.include(GeneratedRelationMethods.new)
+end
+
+
+
+Post::ActiveRecord_Relation
+Post::ActiveRecord_Associations_CollectionProxy
+Post::ActiveRecord_AssociationRelation
+Post::ActiveRecord_DisableJoinsAssociationRelation
+
+
+
