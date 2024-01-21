@@ -59,6 +59,7 @@ class TableOne < ApplicationRecord
     TableOne.where(id: 0).first # NG
     TableOne.where(id: 0).second # NG
     TableOne.where(id: 0).last # NG
+    TableOne.where(id: 0).update(name: 'NEW')
 
     # TableOne.where(id:0).joins(:test).class # TableOne::ActiveRecord_Relation
     TableOne.where(id: 0).joins(:test) # TableOne::PrivateRelation

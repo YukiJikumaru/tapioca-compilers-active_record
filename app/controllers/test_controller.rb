@@ -14,13 +14,25 @@ class TestController < ApplicationController
     TableOne.joins(:x).includes(:x).where(id: 1)
     aaa = TableOne.joins(:x).includes(:x).where(id: 1).limit(1).to_a
 
+    Tag.where(id: 1).new
+    Tag.where(id: 1).find_or_create_by({})
+
+    ActiveRecord::Associations::CollectionProxy
+    ActiveRecord::Batches::BatchEnumerator
+    ActiveRecord::Promise
+
     Post.find(1)
-    x = Post.find_or_create_by(id: 1)
+    x = Post.find_or_create_by(id: 1) do |a|
+      puts a
+    end
     if x
       x.title_previously_changed?(from: nil)
+      x.new_record?
     end
 
     ActiveRecord::Promise
+
+    Post.create(1)
 
     x = Post.find(1)
     Post.includes(:a).with(a: 1)
@@ -33,6 +45,8 @@ class TestController < ApplicationController
 
     Post.new
     Post.build
+    Post.update(1, name: 'NEW NAME!!!')
+    Post.update(name: 'NEW NAME!!!')
     Post.initialize_copy(Post)
     Post.where(id: 1).to_ary
     Post.where.encode_with({})
@@ -40,7 +54,7 @@ class TestController < ApplicationController
     Post.where.cache_key
     # WOW!!!!
     Post.where(id: 1).update(title: 'www')
-    Post.update(1, title: 'x')
+    Post.where(id: 1).update(2, title: 'www')
     Post.where(author_id: 1).update_counters(comment_count: 1)
 
 
@@ -142,9 +156,9 @@ class TestController < ApplicationController
     # Post.third_to_last
     # Post.third_to_last!
     # Post.third!
-    Post.touch_all
+    Post.touch_all(time: Time.zone.now)
     # Post.unscope(:joins)
-    Post.update_all
+    Post.update_all(name: 'x')
     Post.where
     # Post.with(posts_with_tags: Post.where("id > ?", 0))
     # Post.without

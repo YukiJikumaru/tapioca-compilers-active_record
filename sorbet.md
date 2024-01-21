@@ -155,3 +155,40 @@ def create_kw_rest_param(name, type:)
   create_typed_param(RBI::KwRestParam.new(name), type)
 end
 
+
+----------------------------------------------------------------------
+
+
+# tapioca
+
+create_param(name, type:)
+create_param('arg', type: 'String')
+sig { params(arg: String).void }
+def tets(arg); end
+
+create_opt_param(name, type:, default:)
+create_opt_param('arg', type: 'Integer', default: '0')
+sig { params(arg: Integer).void }
+def tets(arg = 0); end
+
+create_rest_param(name, type:)
+create_rest_param('arg', type: 'Integer')
+sig { params(arg: Integer).void }
+def tets(*arg); end
+
+create_kw_param(name, type:)
+create_kw_param('arg', type: 'String')
+sig { params(arg: String).void }
+def tets(arg:); end
+
+create_kw_opt_param(name, type:, default:)
+create_kw_opt_param('arg', type: 'Integer', default: '0')
+sig { params(arg: Integer).void }
+def tets(arg: 0); end
+
+create_kw_rest_param(name, type:)
+???????????????????????
+
+
+create_block_param(name, type:)
+create_typed_param(param, type)
