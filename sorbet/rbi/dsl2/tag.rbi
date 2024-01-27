@@ -59,6 +59,9 @@ class Tag
     sig { params(column_name: T.any(::String, ::Symbol)).returns(T.untyped) }
     def average(column_name); end
 
+    sig { params(attributes: T.untyped, block: T.untyped).returns(Tag) }
+    def build(attributes = nil, &block); end
+
     sig { params(operation: ::Symbol, column_name: T.nilable(T.any(::String, ::Symbol))).returns(T.untyped) }
     def calculate(operation, column_name); end
 
@@ -68,8 +71,11 @@ class Tag
     sig { params(sql: String).returns(Integer) }
     def count_by_sql(sql); end
 
-    sig { params(args: T.untyped, block: T.untyped).returns(Tag) }
-    def create(*args, &block); end
+    sig { params(attributes: T.untyped, block: T.untyped).returns(Tag) }
+    def create(attributes = nil, &block); end
+
+    sig { params(attributes: T.untyped, block: T.untyped).returns(Tag) }
+    def create!(attributes = nil, &block); end
 
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
     def create_or_find_by(attributes = nil, &block); end
@@ -80,11 +86,17 @@ class Tag
     sig { params(other: T.untyped).returns(Tag::ActiveRecord_Relation) }
     def create_with(other); end
 
+    sig { params(id_or_array: T.any(T.untyped, T::Array[T.untyped])).returns(::Integer) }
+    def delete(id_or_array); end
+
     sig { returns(T.untyped) }
     def delete_all; end
 
     sig { params(args: T.untyped).returns(T.untyped) }
     def delete_by(*args); end
+
+    sig { params(id: T.untyped).returns(Tag) }
+    def destroy(id); end
 
     sig { returns(T.untyped) }
     def destroy_all; end
@@ -256,6 +268,49 @@ class Tag
     end
     def includes(arg, *args); end
 
+    sig do
+      params(
+        attributes: T.untyped,
+        returning: T.untyped,
+        unique_by: T.untyped,
+        record_timestamps: T.nilable(::Time)
+      ).returns(::ActiveRecord::Result)
+    end
+    def insert(attributes, returning = nil, unique_by = nil, record_timestamps = nil); end
+
+    sig do
+      params(
+        attributes: T.untyped,
+        returning: T.untyped,
+        unique_by: T.untyped,
+        record_timestamps: T.nilable(::Time)
+      ).returns(::ActiveRecord::Result)
+    end
+    def insert!(attributes, returning = nil, unique_by = nil, record_timestamps = nil); end
+
+    sig do
+      params(
+        attributes: T.untyped,
+        returning: T.untyped,
+        unique_by: T.untyped,
+        record_timestamps: T.nilable(::Time)
+      ).returns(::ActiveRecord::Result)
+    end
+    def insert_all(attributes, returning = nil, unique_by = nil, record_timestamps = nil); end
+
+    sig do
+      params(
+        attributes: T.untyped,
+        returning: T.untyped,
+        unique_by: T.untyped,
+        record_timestamps: T.nilable(T::Boolean)
+      ).returns(::ActiveRecord::Result)
+    end
+    def insert_all!(attributes, returning = nil, unique_by = nil, record_timestamps = nil); end
+
+    sig { params(attributes: T.untyped, column_types: T.untyped, block: T.untyped).returns(Tag) }
+    def instantiate(attributes, column_types = {}, &block); end
+
     sig { returns(Tag::ActiveRecord_Relation) }
     def invert_where; end
 
@@ -349,6 +404,9 @@ class Tag
       ).returns(Tag::ActiveRecord_Relation)
     end
     def preload(arg, *args); end
+
+    sig { params(columns_list: ::Symbol).returns(T.untyped) }
+    def query_constraints(*columns_list); end
 
     sig { params(locks: T::Boolean).returns(Tag::ActiveRecord_Relation) }
     def readonly(locks = true); end
@@ -445,8 +503,38 @@ class Tag
     end
     def unscope(*args); end
 
+    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[Tag]) }
+    def update(id = :all, attributes); end
+
+    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[Tag]) }
+    def update!(id = :all, attributes); end
+
     sig { params(updates: T.untyped).returns(T.untyped) }
     def update_all(updates); end
+
+    sig do
+      params(
+        attributes: T.untyped,
+        on_duplicate: T.untyped,
+        update_only: T.untyped,
+        returning: T.untyped,
+        unique_by: T.untyped,
+        record_timestamps: T.nilable(T::Boolean)
+      ).returns(::ActiveRecord::Result)
+    end
+    def upsert(attributes, on_duplicate: :update, update_only: nil, returning: nil, unique_by: nil, record_timestamps: nil); end
+
+    sig do
+      params(
+        attributes: T.untyped,
+        on_duplicate: T.untyped,
+        update_only: T.untyped,
+        returning: T.untyped,
+        unique_by: T.untyped,
+        record_timestamps: T.nilable(T::Boolean)
+      ).returns(::ActiveRecord::Result)
+    end
+    def upsert_all(attributes, on_duplicate: :update, update_only: nil, returning: nil, unique_by: nil, record_timestamps: nil); end
 
     sig { params(args: T.untyped).returns(Tag::ActiveRecord_Relation) }
     def where(*args); end
@@ -831,8 +919,23 @@ class Tag
   class ActiveRecord_Relation < ::ActiveRecord::Relation
     include GeneratedRelationMethods
 
+    sig { returns(T::Boolean) }
+    def any?; end
+
+    sig { returns(T::Boolean) }
+    def blank?; end
+
     sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
     def build(arg = nil, &block); end
+
+    sig { params(timestamp_column: T.untyped).returns(::String) }
+    def cache_key(timestamp_column = 'updated_at'); end
+
+    sig { returns(::String) }
+    def cache_key_with_version; end
+
+    sig { params(timestamp_column: T.untyped).returns(::String) }
+    def cache_version(timestamp_column = :updated_at); end
 
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
     def create(attributes = nil, &block); end
@@ -846,6 +949,18 @@ class Tag
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
     def create_or_find_by!(attributes, &block); end
 
+    sig { returns(T::Boolean) }
+    def eager_loading?; end
+
+    sig { returns(T::Boolean) }
+    def empty?; end
+
+    sig { returns(T::Boolean) }
+    def empty_scope?; end
+
+    sig { params(options: T.untyped).returns(::String) }
+    def explain(*options); end
+
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
     def find_or_create_by(attributes, &block); end
 
@@ -855,14 +970,95 @@ class Tag
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
     def find_or_initialize_by(attributes, &block); end
 
+    sig { returns(T::Boolean) }
+    def has_limit_or_offset?; end
+
+    sig { returns(::String) }
+    def inspect; end
+
+    sig { returns(T::Array[T.untyped]) }
+    def joined_includes_values; end
+
+    sig { returns(T::Class[Tag]) }
+    def klass; end
+
+    sig { returns(T.self_type) }
+    def load; end
+
+    sig { returns(T.self_type) }
+    def load_async; end
+
+    sig { returns(T::Boolean) }
+    def loaded; end
+
+    sig { returns(T::Boolean) }
+    def loaded?; end
+
+    sig { returns(T::Boolean) }
+    def locked?; end
+
+    sig { returns(T::Boolean) }
+    def many?; end
+
+    sig { returns(T::Class[Tag]) }
+    def model; end
+
     sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
     def new(arg = nil, &block); end
+
+    sig { returns(T::Boolean) }
+    def none?; end
+
+    sig { returns(T::Boolean) }
+    def one?; end
+
+    sig { params(relation: T.untyped).returns(T.self_type) }
+    def preload_associations(relation); end
+
+    sig { returns(T::Array[Tag]) }
+    def records; end
 
     sig { returns(T.self_type) }
     def reload; end
 
     sig { returns(T.self_type) }
     def reset; end
+
+    sig { returns(T::Boolean) }
+    def scheduled?; end
+
+    sig { returns(T::Hash[T.untyped, T.untyped]) }
+    def scope_for_create; end
+
+    sig { returns(::Integer) }
+    def size; end
+
+    sig { returns(::Arel::Table) }
+    def table; end
+
+    sig { returns(T::Array[Tag]) }
+    def to_a; end
+
+    sig { returns(T::Array[Tag]) }
+    def to_ary; end
+
+    sig { returns(::String) }
+    def to_sql; end
+
+    sig { params(attributes: T.untyped).returns(T.untyped) }
+    def update(*attributes); end
+
+    sig { params(attributes: T.untyped).returns(T.untyped) }
+    def update!(*attributes); end
+
+    sig { returns(T::Hash[T.untyped, T.untyped]) }
+    def values; end
+
+    sig { returns(T::Hash[T.untyped, T.untyped]) }
+    def values_for_queries; end
+
+    sig { params(relation_table_name: T.untyped).returns(T::Hash[T.untyped, T.untyped]) }
+    def where_values_hash(relation_table_name = klass.table_name); end
   end
 
   module GeneratedRelationMethods
@@ -911,11 +1107,7 @@ class Tag
     sig { params(value: T::Boolean).returns(ActiveRecord_Relation) }
     def distinct(value = false); end
 
-    sig do
-      params(
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(ActiveRecord_Relation)
-    end
+    sig { params(args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])).returns(ActiveRecord_Relation) }
     def eager_load(*args); end
 
     sig { params(skips: ::Symbol).returns(ActiveRecord_Relation) }
@@ -974,8 +1166,8 @@ class Tag
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def group(arg, *args); end
@@ -994,8 +1186,8 @@ class Tag
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def includes(arg, *args); end
@@ -1005,8 +1197,8 @@ class Tag
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def joins(arg, *args); end
@@ -1019,16 +1211,16 @@ class Tag
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def left_joins(arg, *args); end
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def left_outer_joins(arg, *args); end
@@ -1068,8 +1260,8 @@ class Tag
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)]),
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.any(::String, ::Symbol)]),
+        args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def order(arg, *args); end
@@ -1082,8 +1274,8 @@ class Tag
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def preload(arg, *args); end
@@ -1093,32 +1285,32 @@ class Tag
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        table_names: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        table_names: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def references(arg, *table_names); end
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def regroup(arg, *args); end
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)]),
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def reorder(arg, *args); end
 
     sig do
       params(
-        arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        fields: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        arg: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        fields: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def reselect(arg, *fields); end
@@ -1143,8 +1335,8 @@ class Tag
 
     sig do
       params(
-        field: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
-        fields: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
+        field: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
+        fields: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
     def select(field, *fields); end
@@ -1182,11 +1374,7 @@ class Tag
     sig { params(name: T.untyped).returns(ActiveRecord_Relation) }
     def uniq!(name); end
 
-    sig do
-      params(
-        args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(ActiveRecord_Relation)
-    end
+    sig { params(args: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])).returns(ActiveRecord_Relation) }
     def unscope(*args); end
 
     sig { params(args: T.untyped).returns(ActiveRecord_Relation) }

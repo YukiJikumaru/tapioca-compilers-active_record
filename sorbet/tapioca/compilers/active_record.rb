@@ -15,6 +15,8 @@ module Tapioca
       T_UNTYPED = 'T.untyped'
       T_BOOLEAN = 'T::Boolean'
       T_ATTACHED = 'T.attached_class'
+      # @TODO 主キーの型をテーブルから導出する
+      TODO_PRIMARY_KEY = T_UNTYPED
 
       ConstantType = type_member {{ fixed: ::T.class_of(::ActiveRecord::Base) }}
 
@@ -89,12 +91,13 @@ module Tapioca
         end
       end
 
+      # activerecord-7.1.1/lib/active_record/querying.rb
       sig { params(model: ::RBI::Scope, constant: ConstantType).void }
       def populate_querying_class_method(model, constant)
-        # activerecord-7.1.1/lib/active_record/querying.rb
         model_name = constant.name.to_s
 
         # activerecord-7.1.1/lib/active_record/relation/finder_methods.rb
+        # delegate to Model.all
         model.create_method('find', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: model_name, class_method: true)
         model.create_method('find_by', parameters: [create_param('arg', type: T_UNTYPED), create_rest_param('args', type: T_UNTYPED)], return_type: as_nilable_type(model_name), class_method: true)
         model.create_method('find_by!', parameters: [create_param('arg', type: T_UNTYPED), create_rest_param('args', type: T_UNTYPED)], return_type: model_name, class_method: true)
@@ -484,47 +487,45 @@ module Tapioca
             create_param('attributes', type: T_UNTYPED),
             create_opt_param('returning', type: T_UNTYPED, default: 'nil'),
             create_opt_param('unique_by', type: T_UNTYPED, default: 'nil'),
-            create_opt_param('record_timestamps', type: as_nilable_type('::Time'), default: 'nil'),
+            create_opt_param('record_timestamps', type: as_nilable_type('T::Boolean'), default: 'nil'),
           ],
           return_type: '::ActiveRecord::Result',
           class_method: true,
         )
-
-        # def self.upsert(attributes, **kwargs)
-        # def self.upsert_all(attributes, on_duplicate: :update, update_only: nil, returning: nil, unique_by: nil, record_timestamps: nil)
-        # def self.instantiate(attributes, column_types = {}, &block)
-        # def self.update(id = :all, attributes)
-        # def self.update!(id = :all, attributes)
-        # def self.query_constraints(*columns_list)
-        # def self.destroy(id)
-        # def self.delete(id_or_array)
-
-        # def new_record?
-        # def previously_new_record?
-        # def previously_persisted?
-        # def destroyed?
-        # def persisted?
-        # def save(**options, &block)
-        # def save!(**options, &block)
-        # def delete
-        # def destroy
-        # def destroy!
-        # def becomes(klass)
-        # def becomes!(klass)
-        # def update_attribute(name, value)
-        # def update_attribute!(name, value)
-        # def update(attributes)
-        # def update!(attributes)
-        # def update_column(name, value)
-        # def update_columns(attributes)
-        # def increment(attribute, by = 1)
-        # def increment!(attribute, by = 1, touch: nil)
-        # def decrement(attribute, by = 1)
-        # def decrement!(attribute, by = 1, touch: nil)
-        # def toggle(attribute)
-        # def toggle!(attribute)
-        # def reload(options = nil)
-        # def touch(*names, time: nil)
+        model.create_method(
+          'upsert',
+          parameters: [
+            create_param('attributes', type: T_UNTYPED),
+            create_kw_opt_param('on_duplicate', type: T_UNTYPED, default: ':update'),
+            create_kw_opt_param('update_only', type: T_UNTYPED, default: 'nil'),
+            create_kw_opt_param('returning', type: T_UNTYPED, default: 'nil'),
+            create_kw_opt_param('unique_by', type: T_UNTYPED, default: 'nil'),
+            create_kw_opt_param('record_timestamps', type: as_nilable_type('T::Boolean'), default: 'nil'),
+          ],
+          return_type: '::ActiveRecord::Result',
+          class_method: true,
+        )
+        model.create_method(
+          'upsert_all',
+          parameters: [
+            create_param('attributes', type: T_UNTYPED),
+            create_kw_opt_param('on_duplicate', type: T_UNTYPED, default: ':update'),
+            create_kw_opt_param('update_only', type: T_UNTYPED, default: 'nil'),
+            create_kw_opt_param('returning', type: T_UNTYPED, default: 'nil'),
+            create_kw_opt_param('unique_by', type: T_UNTYPED, default: 'nil'),
+            create_kw_opt_param('record_timestamps', type: as_nilable_type('T::Boolean'), default: 'nil'),
+          ],
+          return_type: '::ActiveRecord::Result',
+          class_method: true,
+        )
+        model.create_method('instantiate', parameters: [create_param('attributes', type: T_UNTYPED), create_opt_param('column_types', type: T_UNTYPED, default: '{}'), create_block_param('block', type: T_UNTYPED)], return_type: model_name, class_method: true)
+        # @TODO updateの真の引数は `as_any(TODO_PRIMARY_KEY, as_array(TODO_PRIMARY_KEY))` で返り値も `as_any(model_name, as_array(model_name))` だが・・・
+        model.create_method('update', parameters: [create_opt_param('id', type: TODO_PRIMARY_KEY, default: ':all'), create_param('attributes', type: T_UNTYPED)], return_type: as_array(model_name), class_method: true)
+        model.create_method('update!', parameters: [create_opt_param('id', type: TODO_PRIMARY_KEY, default: ':all'), create_param('attributes', type: T_UNTYPED)], return_type: as_array(model_name), class_method: true)
+        model.create_method('query_constraints', parameters: [create_rest_param('columns_list', type: '::Symbol')], class_method: true)
+        # @TODO destroyの真の引数は `as_any(TODO_PRIMARY_KEY, as_array(TODO_PRIMARY_KEY))` で返り値も `as_any(model_name, as_array(model_name))` だが・・・
+        model.create_method('destroy', parameters: [create_param('id', type: TODO_PRIMARY_KEY)], return_type: model_name, class_method: true)
+        model.create_method('delete', parameters: [create_param('id_or_array', type: as_any(TODO_PRIMARY_KEY, as_array(TODO_PRIMARY_KEY)))], return_type: '::Integer', class_method: true)
       end
 
       # Post::GeneratedRelationMethods
@@ -546,22 +547,84 @@ module Tapioca
       sig { params(model: ::RBI::Scope, constant: ConstantType, model_name: ::String).void }
       def create_active_record_relation(model, constant, model_name)
         ar_relation = model.create_class('ActiveRecord_Relation', superclass_name: '::ActiveRecord::Relation')
+
         ar_relation.create_include('GeneratedRelationMethods')
 
-        # activerecord-7.1.1/lib/active_record/relation.rb
         common_block_param = as_nilable_type("T.proc.params(arg: #{model_name}).void")
-        ar_relation.create_method('new', parameters: [create_opt_param('arg', type: T_UNTYPED, default: 'nil'), create_block_param('block', type: common_block_param)], return_type: model_name)
+
+        # activerecord-7.1.1/lib/active_record/relation.rb
+
+        # Overwrite ::ActiveRecord::Relation's instant methods.
+        # We DONOT Trust and Depend on Tapioca
+        ar_relation.create_method('any?', return_type: T_BOOLEAN)
+        ar_relation.create_method('blank?', return_type: T_BOOLEAN)
         ar_relation.create_method('build', parameters: [create_opt_param('arg', type: T_UNTYPED, default: 'nil'), create_block_param('block', type: common_block_param)], return_type: model_name)
+        ar_relation.create_method('cache_key', parameters: [create_opt_param('timestamp_column', type: T_UNTYPED, default: "'updated_at'")], return_type: '::String')
+        ar_relation.create_method('cache_key_with_version', return_type: '::String')
+        ar_relation.create_method('cache_version', parameters: [create_opt_param('timestamp_column', type: T_UNTYPED, default: ':updated_at')], return_type: '::String')
         # 本当はattributesに配列を与えた場合はT::Array[]を返す,しかしsorbetで対応できないしそんな使い方はしてほしくない
         ar_relation.create_method('create', parameters: [create_opt_param('attributes', type: T_UNTYPED, default: 'nil'), create_block_param('block', type: common_block_param)], return_type: model_name)
         ar_relation.create_method('create!', parameters: [create_opt_param('attributes', type: T_UNTYPED, default: 'nil'), create_block_param('block', type: common_block_param)], return_type: model_name)
-        ar_relation.create_method('find_or_create_by', parameters: [create_param('attributes', type: T_UNTYPED), create_block_param('block', type: common_block_param)], return_type: model_name)
-        ar_relation.create_method('find_or_create_by!', parameters: [create_param('attributes', type: T_UNTYPED), create_block_param('block', type: common_block_param)], return_type: model_name)
         ar_relation.create_method('create_or_find_by', parameters: [create_param('attributes', type: T_UNTYPED), create_block_param('block', type: common_block_param)], return_type: model_name)
         ar_relation.create_method('create_or_find_by!', parameters: [create_param('attributes', type: T_UNTYPED), create_block_param('block', type: common_block_param)], return_type: model_name)
+        ar_relation.create_method('eager_loading?', return_type: T_BOOLEAN)
+        ar_relation.create_method('empty?', return_type: T_BOOLEAN)
+        ar_relation.create_method('empty_scope?', return_type: T_BOOLEAN)
+        ar_relation.create_method('explain', parameters: [create_rest_param('options', type: T_UNTYPED)], return_type: '::String')
+        ar_relation.create_method('find_or_create_by', parameters: [create_param('attributes', type: T_UNTYPED), create_block_param('block', type: common_block_param)], return_type: model_name)
+        ar_relation.create_method('find_or_create_by!', parameters: [create_param('attributes', type: T_UNTYPED), create_block_param('block', type: common_block_param)], return_type: model_name)
         ar_relation.create_method('find_or_initialize_by', parameters: [create_param('attributes', type: T_UNTYPED), create_block_param('block', type: common_block_param)], return_type: model_name)
+        ar_relation.create_method('has_limit_or_offset?', return_type: T_BOOLEAN)
+        ar_relation.create_method('inspect', return_type: '::String')
+        ar_relation.create_method('joined_includes_values', return_type: as_array(T_UNTYPED))
+        ar_relation.create_method('klass', return_type: "T::Class[#{model_name}]")
+        ar_relation.create_method('load', return_type: T_SELF)
+        ar_relation.create_method('load_async', return_type: T_SELF)
+        ar_relation.create_method('loaded', return_type: T_BOOLEAN)
+        ar_relation.create_method('loaded?', return_type: T_BOOLEAN)
+        ar_relation.create_method('locked?', return_type: T_BOOLEAN)
+        ar_relation.create_method('many?', return_type: T_BOOLEAN)
+        ar_relation.create_method('model', return_type: "T::Class[#{model_name}]")
+        ar_relation.create_method('new', parameters: [create_opt_param('arg', type: T_UNTYPED, default: 'nil'), create_block_param('block', type: common_block_param)], return_type: model_name)
+        ar_relation.create_method('none?', return_type: T_BOOLEAN)
+        ar_relation.create_method('one?', return_type: T_BOOLEAN)
+        ar_relation.create_method('preload_associations', parameters: [create_param('relation', type: T_UNTYPED)], return_type: T_SELF)
+        ar_relation.create_method('records', return_type: as_array(model_name))
         ar_relation.create_method('reload', return_type: T_SELF)
         ar_relation.create_method('reset', return_type: T_SELF)
+        ar_relation.create_method('scheduled?', return_type: T_BOOLEAN)
+        ar_relation.create_method('scope_for_create', return_type: 'T::Hash[T.untyped, T.untyped]')
+        ar_relation.create_method('size', return_type: '::Integer')
+        ar_relation.create_method('table', return_type: '::Arel::Table')
+        ar_relation.create_method('to_a', return_type: as_array(model_name))
+        ar_relation.create_method('to_ary', return_type: as_array(model_name))
+        ar_relation.create_method('to_sql', return_type: '::String')
+        # `ActiveRecord::Relation#update` has 2 overload signatures.
+        #
+        # ApplicationRecord.where(...).update(1, name: '🍕')
+        # ApplicationRecord.where(...).update(name: '🍕')
+        #
+        # So Tapioca generates a rbi file below.
+        #
+        # ```
+        # def update(id = T.unsafe(nil), attributes); end
+        # def update!(id = T.unsafe(nil), attributes); end
+        # ```
+        #
+        # However this causes a type error.
+        #
+        # # OK
+        # ApplicationRecord.where(...).update(1, name: '🍕')
+        # # NG
+        # ApplicationRecord.where(...).update(name: '🍕')
+        # > Not enough arguments provided for method `ActiveRecord::Relation#update`. Expected: `1..2`, got: `1` (7004)
+        #
+        # To avoid the error, we must redeclare parameters as rest parameters.
+        ar_relation.create_method('update', parameters: [create_rest_param('attributes', type: T_UNTYPED)], return_type: T_UNTYPED)
+        ar_relation.create_method('update!', parameters: [create_rest_param('attributes', type: T_UNTYPED)], return_type: T_UNTYPED)
+        ar_relation.create_method('values', return_type: 'T::Hash[T.untyped, T.untyped]')
+        ar_relation.create_method('values_for_queries', return_type: 'T::Hash[T.untyped, T.untyped]')
+        ar_relation.create_method('where_values_hash', parameters: [create_opt_param('relation_table_name', type: T_UNTYPED, default: 'klass.table_name')], return_type: 'T::Hash[T.untyped, T.untyped]')
       end
 
       # class Post::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
@@ -673,7 +736,7 @@ module Tapioca
       sig { params(generated_association_methods: ::RBI::Scope, activerecord_relation: ::String).void }
       def populate_query_methods(generated_association_methods, activerecord_relation)
         # activerecord-7.1.1/lib/active_record/relation/query_methods.rb
-        common_type = 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])'
+        common_type = 'T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])'
 
         generated_association_methods.create_method('includes', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
         generated_association_methods.create_method('eager_load', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
@@ -685,9 +748,9 @@ module Tapioca
         generated_association_methods.create_method('reselect', parameters: [create_param('arg', type: common_type), create_rest_param('fields', type: common_type)], return_type: activerecord_relation)
         generated_association_methods.create_method('group', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
         generated_association_methods.create_method('regroup', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
-        generated_association_methods.create_method('order', parameters: [create_param('arg', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])'), create_rest_param('args', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])')], return_type: activerecord_relation)
+        generated_association_methods.create_method('order', parameters: [create_param('arg', type: 'T.any(::String, ::Symbol, T::Hash[T.untyped, T.any(::String, ::Symbol)])'), create_rest_param('args', type: 'T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])')], return_type: activerecord_relation)
         generated_association_methods.create_method('in_order_of', parameters: [create_param('column', type: as_any('::String', '::Symbol')), create_param('values', type: T_UNTYPED)], return_type: activerecord_relation)
-        generated_association_methods.create_method('reorder', parameters: [create_param('arg', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])'), create_rest_param('args', type: 'T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])')], return_type: activerecord_relation)
+        generated_association_methods.create_method('reorder', parameters: [create_param('arg', type: 'T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])'), create_rest_param('args', type: 'T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])')], return_type: activerecord_relation)
         generated_association_methods.create_method('unscope', parameters: [create_rest_param('args', type: common_type)], return_type: activerecord_relation)
         generated_association_methods.create_method('joins', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)
         generated_association_methods.create_method('left_outer_joins', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: activerecord_relation)

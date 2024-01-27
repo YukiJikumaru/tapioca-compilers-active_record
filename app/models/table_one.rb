@@ -39,95 +39,120 @@ class TableOne < ApplicationRecord
     end
   end
 
-  def inst
-    # T.reveal_type id # NG
-    # T.reveal_type string_non_null
-    # T.reveal_type string_nullable
-    # T.reveal_type integer_non_null
-    # T.reveal_type integer_nullable
-    # T.reveal_type created_at # NG
-    # T.reveal_type updated_at # NG
+  def self.assert_class_method
+    fail('This code is just for type checking test, dont execute me!') if '🐕' != '🐈'
 
+    T.assert_type!(self.===(1), FalseClass)
+    # T.assert_type!(abstract_class?, T::Boolean)
 
-    TableOne.first # NG
-    TableOne.last # NG
+    T.assert_type!(select(:id, :string_non_null, :string_nullable), ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(select('`id`'), ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(joins(:example), ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(joins('example'), ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(joins(hash: { example: :example }), ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(left_joins(:example), ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(left_outer_joins(:example), ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(includes(:example), ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(eager_load(:example), ::TableOne::ActiveRecord_Relation)
+  end
 
-    TableOne.select(:id) # TableOne::PrivateRelation
+  def instance_method_tests
+    fail('This code is just for type checking test, dont execute me!') if '🐕' != '🐈'
 
-    # TableOne.where(id:0).class # TableOne::ActiveRecord_Relation
-    TableOne.where(id: 0) # TableOne::PrivateRelationWhereChain
-    TableOne.where(id: 0).first # NG
-    TableOne.where(id: 0).second # NG
-    TableOne.where(id: 0).last # NG
-    TableOne.where(id: 0).update(name: 'NEW')
+    ##### GeneratedAttributeMethods #####
+    T.assert_type!(id, ::Integer)
+    T.assert_type!(id_was, T.nilable(::Integer))
+    T.assert_type!(string_non_null, ::String)
+    T.assert_type!(string_nullable, T.nilable(::String))
+    T.assert_type!(integer_non_null, ::Integer)
+    T.assert_type!(integer_nullable, T.nilable(::Integer))
+    T.assert_type!(created_at, ::ActiveSupport::TimeWithZone)
+    T.assert_type!(updated_at, ::ActiveSupport::TimeWithZone)
 
-    # TableOne.where(id:0).joins(:test).class # TableOne::ActiveRecord_Relation
-    TableOne.where(id: 0).joins(:test) # TableOne::PrivateRelation
-    TableOne.where(id: 0).joins(:test).first
-
-    # TableOne.joins(:test).class # TableOne::ActiveRecord_Relation
-    TableOne.joins(:test) # TableOne::PrivateRelation
-
-    # TableOne.includes(:test).class # TableOne::ActiveRecord_Relation
-    TableOne.includes(:test) # TableOne::PrivateRelation
-
-
-
-    # irb(main):026> TableOne.where(id:1).class
-    # => TableOne::ActiveRecord_Relation
-    # irb(main):027> TableOne.where.class
-    # => ActiveRecord::QueryMethods::WhereChain
-
-    # irb(main):037> TableOne.where(id: 0).class
-    # => TableOne::ActiveRecord_Relation
-    # irb(main):038> TableOne.where(id: 0).class.ancestors
-    # =>
-    # [TableOne::ActiveRecord_Relation,
-    #  TableOne::GeneratedRelationMethods,
-
-    # irb(main):040> TableOne.ancestors
-    # =>
-    # [TableOne(id: integer, string_non_null: string, string_nullable: string, integer_non_null: integer, integer_nullable: integer, created_at: datetime, updated_at: datetime),
-    #  TableOne::GeneratedAssociationMethods,
-    #  TableOne::GeneratedAttributeMethods,
-
-    # irb(main):066> ObjectSpace.each_object(Class).to_a.map(&:to_s).grep /TableOne/
-    # =>
-    # [
-    #  "TableOne::ActiveRecord_DisableJoinsAssociationRelation",
-    #  "TableOne::ActiveRecord_AssociationRelation",
-    #  "TableOne::ActiveRecord_Associations_CollectionProxy",
-    #  "TableOne::ActiveRecord_Relation",
-    #  "TableOne"]
-
-
-
-    # ActiveRecord_AssociationRelation active_record/association_relation.rb
-    # insert insert_all insert! insert_all! upsert upsert_all
-
-
-    # active_record/model_schema.rb
-    #--------------------------------------
-    # def load_schema!
-    #   unless table_name
-    #     raise ActiveRecord::TableNotSpecified, "#{self} has no table configured. Set one with #{self}.table_name="
-    #   end
-    #   columns_hash = connection.schema_cache.columns_hash(table_name)
-    #   columns_hash = columns_hash.except(*ignored_columns) unless ignored_columns.empty?
-    #   @columns_hash = columns_hash.freeze
-    #   @columns_hash.each do |name, column|
-    #     type = connection.lookup_cast_type_from_column(column)
-    #     type = _convert_type_from_options(type)
-    #     define_attribute(
-    #       name,
-    #       type,
-    #       default: column.default,
-    #       user_provided_default: false
-    #     )
-    #     alias_attribute :id_value, :id if name == "id"
-    #   end
-
-    #   super
-    # end
+    ##### ActiveRecord_Relation #####
+    relation = TableOne.where(id: 0)
+    T.assert_type!(relation, ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(relation.any?, T::Boolean)
+    T.assert_type!(relation.blank?, T::Boolean)
+    T.assert_type!(relation.build({}), ::TableOne)
+    T.assert_type!(relation.build({}) { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
+    T.assert_type!(relation.cache_key, ::String)
+    T.assert_type!(relation.cache_key(:last_reviewed_at), ::String)
+    T.assert_type!(relation.cache_key_with_version, ::String)
+    T.assert_type!(relation.cache_version(:last_reviewed_at), ::String)
+    T.assert_type!(relation.create(), ::TableOne)
+    T.assert_type!(relation.create({}), ::TableOne)
+    T.assert_type!(relation.create({}) { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
+    T.assert_type!(relation.create!(), ::TableOne)
+    T.assert_type!(relation.create!({}), ::TableOne)
+    T.assert_type!(relation.create!({}) { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
+    T.assert_type!(relation.create_or_find_by({}), ::TableOne)
+    T.assert_type!(relation.create_or_find_by({}) { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
+    T.assert_type!(relation.create_or_find_by!({}), ::TableOne)
+    T.assert_type!(relation.create_or_find_by!({}) { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
+    relation.delete_all
+    relation.delete_by(id: 1)
+    relation.delete_by('published_at < ?', 2.weeks.ago)
+    relation.destroy_all
+    relation.destroy_by(id: 1)
+    relation.destroy_by('published_at < ?', 2.weeks.ago)
+    T.assert_type!(relation.eager_loading?, T::Boolean)
+    T.assert_type!(relation.empty?, T::Boolean)
+    T.assert_type!(relation.empty_scope?, T::Boolean)
+    relation.encode_with(::Psych::Coder.new('i_am_coder'))
+    T.assert_type!(relation.explain, ::String)
+    T.assert_type!(relation.explain(:analyze), ::String)
+    T.assert_type!(relation.explain(:analyze, :verbose), ::String)
+    T.assert_type!(relation.find_or_create_by({}), ::TableOne)
+    T.assert_type!(relation.find_or_create_by({}) { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
+    T.assert_type!(relation.find_or_initialize_by({}), ::TableOne)
+    T.assert_type!(relation.find_or_initialize_by({}) { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
+    T.assert_type!(relation.has_limit_or_offset?, T::Boolean)
+    T.assert_type!(relation.inspect, ::String)
+    T.assert_type!(relation.joined_includes_values, T::Array[T.untyped])
+    T.assert_type!(relation.klass, T::Class[::TableOne])
+    T.assert_type!(relation.load, ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(relation.load_async, ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(relation.loaded, T::Boolean)
+    T.assert_type!(relation.loaded?, T::Boolean)
+    T.assert_type!(relation.locked?, T::Boolean)
+    T.assert_type!(relation.many?, T::Boolean)
+    T.assert_type!(relation.model, T::Class[::TableOne])
+    T.assert_type!(relation.new, ::TableOne)
+    T.assert_type!(relation.new { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
+    T.assert_type!(relation.none, ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(relation.none?, T::Boolean)
+    T.assert_type!(relation.one?, T::Boolean)
+    relation.predicate_builder
+    T.assert_type!(relation.preload_associations(relation), ::TableOne::ActiveRecord_Relation)
+    relation.pretty_print(::PP)
+    T.assert_type!(relation.records, T::Array[::TableOne])
+    T.assert_type!(relation.reload, ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(relation.reset, ::TableOne::ActiveRecord_Relation)
+    T.assert_type!(relation.scheduled?, T::Boolean)
+    T.assert_type!(relation.scope_for_create, T::Hash[T.untyped, T.untyped])
+    relation.scoping { 'HELLO' }
+    T.assert_type!(relation.size, ::Integer)
+    relation.skip_preloading_value
+    relation.skip_preloading_value=('TEST')
+    T.assert_type!(relation.table, ::Arel::Table)
+    T.assert_type!(relation.to_a, T::Array[::TableOne])
+    T.assert_type!(relation.to_ary, T::Array[::TableOne])
+    T.assert_type!(relation.to_sql, ::String)
+    relation.touch_all
+    relation.touch_all(:created_at)
+    relation.touch_all(time: Time.new(2020, 5, 16, 0, 0, 0))
+    relation.update(name: 'NEW')
+    relation.update(1, name: 'NEW')
+    relation.update!(name: 'NEW')
+    relation.update!(1, name: 'NEW')
+    relation.update_all(author: 'David')
+    relation.update_all('number = id')
+    relation.update_all(title: ::Arel.sql("title + ' - volume 1'"))
+    relation.update_counters(comment_count: 1)
+    T.assert_type!(relation.values, T::Hash[T.untyped, T.untyped])
+    T.assert_type!(relation.values_for_queries, T::Hash[T.untyped, T.untyped])
+    T.assert_type!(relation.where_values_hash, T::Hash[T.untyped, T.untyped])
+    T.assert_type!(relation.where_values_hash(:relation_table_name), T::Hash[T.untyped, T.untyped])
   end
 end

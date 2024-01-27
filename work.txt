@@ -113,4 +113,4 @@ def ==(other)
 def pretty_print(pp)
 def blank?
 def values
-def inspect
+def inspectcreate_rest_param(name, type:)

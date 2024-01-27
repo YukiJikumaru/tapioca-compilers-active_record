@@ -20,6 +20,7 @@ class TestController < ApplicationController
     ActiveRecord::Associations::CollectionProxy
     ActiveRecord::Batches::BatchEnumerator
     ActiveRecord::Promise
+    ActiveRecord::Result
 
     Post.find(1)
     x = Post.find_or_create_by(id: 1) do |a|
@@ -46,13 +47,14 @@ class TestController < ApplicationController
     Post.new
     Post.build
     Post.update(1, name: 'NEW NAME!!!')
-    Post.update(name: 'NEW NAME!!!')
     Post.initialize_copy(Post)
     Post.where(id: 1).to_ary
     Post.where.encode_with({})
     Post.where.size
     Post.where.cache_key
     # WOW!!!!
+    Post.where(id: 1)
+    Post.update(1, title: 'www')
     Post.where(id: 1).update(title: 'www')
     Post.where(id: 1).update(2, title: 'www')
     Post.where(author_id: 1).update_counters(comment_count: 1)
