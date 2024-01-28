@@ -39,6 +39,14 @@ class TableOne < ApplicationRecord
     end
   end
 
+  class Foo < Array
+  end
+
+  def test
+    foo = Foo.new
+    foo[0]
+  end
+
   def self.assert_class_method
     fail('This code is just for type checking test, dont execute me!') if '🐕' != '🐈'
 
@@ -154,5 +162,19 @@ class TableOne < ApplicationRecord
     T.assert_type!(relation.values_for_queries, T::Hash[T.untyped, T.untyped])
     T.assert_type!(relation.where_values_hash, T::Hash[T.untyped, T.untyped])
     T.assert_type!(relation.where_values_hash(:relation_table_name), T::Hash[T.untyped, T.untyped])
+
+    # batches
+    T.assert_type!(relation.find_each, T::Enumerator[::TableOne])
+    T.assert_type!(relation.find_in_batches, T::Enumerator[::TableOne])
+    T.assert_type!(relation.in_batches, ::ActiveRecord::Batches::BatchEnumerator)
+    # T.assert_type!(relation.in_batches, ::ActiveRecord::Batches::BatchEnumerator[::TableOne])
+
+    x = relation[0]
+    relation.first
+    relation.each { |x| x }
+    relation.map { |x| x }
+
+    T.assert_type!(1, Integer)
+    T.assert_type!(1, Numeric)
   end
 end

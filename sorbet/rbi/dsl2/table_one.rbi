@@ -7,13 +7,13 @@
 class TableOne
   include ::TableOne::GeneratedAttributeMethods
   include ::TableOne::GeneratedAssociationMethods
-  extend GeneratedRelationMethods
+  extend ::TableOne::GeneratedRelationMethods
 
   class << self
-    sig { params(other: ::ActiveRecord::Relation).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(other: ::ActiveRecord::Relation).returns(::TableOne::ActiveRecord_Relation) }
     def and(other); end
 
-    sig { params(args: ::String).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(args: ::String).returns(::TableOne::ActiveRecord_Relation) }
     def annotate(*args); end
 
     sig { params(args: T.untyped).returns(T::Boolean) }
@@ -47,10 +47,10 @@ class TableOne
     sig { params(column_name: T.any(::String, ::Symbol)).returns(::ActiveRecord::Promise) }
     def async_minimum(column_name); end
 
-    sig { params(column_names: T.any(::Symbol, ::String)).returns(::ActiveRecord::Promise) }
+    sig { params(column_names: T.any(::String, ::Symbol)).returns(::ActiveRecord::Promise) }
     def async_pick(*column_names); end
 
-    sig { params(column_names: T.any(::Symbol, ::String)).returns(::ActiveRecord::Promise) }
+    sig { params(column_names: T.any(::String, ::Symbol)).returns(::ActiveRecord::Promise) }
     def async_pluck(*column_names); end
 
     sig { params(initial_value_or_column: T.any(::String, ::Symbol, ::Integer)).returns(::ActiveRecord::Promise) }
@@ -59,7 +59,7 @@ class TableOne
     sig { params(column_name: T.any(::String, ::Symbol)).returns(T.untyped) }
     def average(column_name); end
 
-    sig { params(attributes: T.untyped, block: T.untyped).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.untyped).returns(::TableOne) }
     def build(attributes = nil, &block); end
 
     sig { params(operation: ::Symbol, column_name: T.nilable(T.any(::String, ::Symbol))).returns(T.untyped) }
@@ -68,25 +68,25 @@ class TableOne
     sig { params(column_name: T.nilable(T.any(::String, ::Symbol))).returns(::Integer) }
     def count(column_name = nil); end
 
-    sig { params(sql: String).returns(Integer) }
+    sig { params(sql: String).returns(::Integer) }
     def count_by_sql(sql); end
 
-    sig { params(attributes: T.untyped, block: T.untyped).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.untyped).returns(::TableOne) }
     def create(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.untyped).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.untyped).returns(::TableOne) }
     def create!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def create_or_find_by(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def create_or_find_by!(attributes = nil, &block); end
 
-    sig { params(other: T.untyped).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(other: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
     def create_with(other); end
 
-    sig { params(id_or_array: T.any(T.untyped, T::Array[T.untyped])).returns(::Integer) }
+    sig { params(id_or_array: T.untyped).returns(::Integer) }
     def delete(id_or_array); end
 
     sig { returns(T.untyped) }
@@ -95,7 +95,7 @@ class TableOne
     sig { params(args: T.untyped).returns(T.untyped) }
     def delete_by(*args); end
 
-    sig { params(id: T.untyped).returns(TableOne) }
+    sig { params(id: T.untyped).returns(::TableOne) }
     def destroy(id); end
 
     sig { returns(T.untyped) }
@@ -104,44 +104,44 @@ class TableOne
     sig { params(args: T.untyped).returns(T.untyped) }
     def destroy_by(*args); end
 
-    sig { params(value: T::Boolean).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(value: T::Boolean).returns(::TableOne::ActiveRecord_Relation) }
     def distinct(value = false); end
 
     sig do
       params(
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def eager_load(*args); end
 
-    sig { params(skips: ::Symbol).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(skips: ::Symbol).returns(::TableOne::ActiveRecord_Relation) }
     def except(*skips); end
 
-    sig { params(records: T::Enumerable[::ActiveRecord::Base]).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(records: T::Enumerable[::ActiveRecord::Base]).returns(::TableOne::ActiveRecord_Relation) }
     def excluding(*records); end
 
     sig { params(args: T.untyped).returns(T::Boolean) }
     def exists?(args = :none); end
 
-    sig { params(modules: ::Module, block: T.untyped).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(modules: ::Module, block: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
     def extending(*modules, &block); end
 
     sig { params(association: ::Symbol).returns(T::Array[T.untyped]) }
     def extract_associated(association); end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def fifth; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def fifth!; end
 
-    sig { params(args: T.untyped).returns(TableOne) }
+    sig { params(args: T.untyped).returns(::TableOne) }
     def find(*args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(T.nilable(TableOne)) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(T.nilable(::TableOne)) }
     def find_by(arg, *args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(TableOne) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(::TableOne) }
     def find_by!(arg, *args); end
 
     sig do
@@ -150,7 +150,7 @@ class TableOne
         binds: T.untyped,
         preparable: T.nilable(T::Boolean),
         block: T.untyped
-      ).returns(T::Array[TableOne])
+      ).returns(T::Array[::TableOne])
     end
     def find_by_sql(sql, binds = [], preparable: nil, &block); end
 
@@ -161,8 +161,8 @@ class TableOne
         batch_size: Integer,
         error_on_ignore: T.nilable(T::Boolean),
         order: T.untyped,
-        block: T.nilable(T.proc.params(arg: TableOne).void)
-      ).returns(T::Enumerator[TableOne])
+        block: T.nilable(T.proc.params(arg: ::TableOne).void)
+      ).returns(T::Enumerator[::TableOne])
     end
     def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
 
@@ -173,71 +173,71 @@ class TableOne
         batch_size: Integer,
         error_on_ignore: T.nilable(T::Boolean),
         order: T.untyped,
-        block: T.nilable(T.proc.params(arg: TableOne).void)
-      ).returns(T::Enumerator[TableOne])
+        block: T.nilable(T.proc.params(arg: ::TableOne).void)
+      ).returns(T::Enumerator[::TableOne])
     end
     def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def find_or_create_by(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def find_or_create_by!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def find_or_initialize_by(attributes = nil, &block); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(TableOne) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(::TableOne) }
     def find_sole_by(arg, *args); end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def first; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def first!; end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def first_or_create(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def first_or_create(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def first_or_create!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def first_or_create!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def first_or_initialize(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def first_or_initialize(attributes = nil, &block); end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def forty_two; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def forty_two!; end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def fourth; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def fourth!; end
 
-    sig { params(value: T.untyped, subquery_name: T.untyped).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(value: T.untyped, subquery_name: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
     def from(value, subquery_name = nil); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def group(arg, *args); end
 
-    sig { params(opts: ::String, rest: T.untyped).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(opts: ::String, rest: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
     def having(opts, *rest); end
 
     sig { returns(T::Array[T.untyped]) }
@@ -252,19 +252,19 @@ class TableOne
         error_on_ignore: T.nilable(T::Boolean),
         order: T.untyped,
         use_ranges: T.nilable(T::Boolean),
-        block: T.nilable(T.proc.params(arg: TableOne).void)
-      ).returns(T::Enumerator[TableOne])
+        block: T.nilable(T.proc.params(arg: ::TableOne).void)
+      ).returns(T::Enumerator[::TableOne])
     end
     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
 
-    sig { params(column: T.any(::String, ::Symbol), values: T.untyped).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(column: T.any(::String, ::Symbol), values: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
     def in_order_of(column, values); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def includes(arg, *args); end
 
@@ -308,31 +308,31 @@ class TableOne
     end
     def insert_all!(attributes, returning = nil, unique_by = nil, record_timestamps = nil); end
 
-    sig { params(attributes: T.untyped, column_types: T.untyped, block: T.untyped).returns(TableOne) }
+    sig { params(attributes: T.untyped, column_types: T.untyped, block: T.untyped).returns(::TableOne) }
     def instantiate(attributes, column_types = {}, &block); end
 
-    sig { returns(TableOne::ActiveRecord_Relation) }
+    sig { returns(::TableOne::ActiveRecord_Relation) }
     def invert_where; end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def joins(arg, *args); end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def last; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def last!; end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def left_joins(arg, *args); end
 
@@ -340,14 +340,14 @@ class TableOne
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def left_outer_joins(arg, *args); end
 
-    sig { params(value: ::Integer).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(value: ::Integer).returns(::TableOne::ActiveRecord_Relation) }
     def limit(value); end
 
-    sig { params(locks: T::Boolean).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(locks: T::Boolean).returns(::TableOne::ActiveRecord_Relation) }
     def lock(locks = true); end
 
     sig { params(args: T.untyped).returns(T::Boolean) }
@@ -360,67 +360,67 @@ class TableOne
       params(
         other: ::ActiveRecord::Relation,
         rest: ::ActiveRecord::Relation
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def merge(other, *rest); end
 
     sig { params(column_name: T.any(::String, ::Symbol)).returns(T.untyped) }
     def minimum(column_name); end
 
-    sig { returns(TableOne::ActiveRecord_Relation) }
+    sig { returns(::TableOne::ActiveRecord_Relation) }
     def none; end
 
     sig { params(args: T.untyped).returns(T::Boolean) }
     def none?(*args); end
 
-    sig { params(value: ::Integer).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(value: ::Integer).returns(::TableOne::ActiveRecord_Relation) }
     def offset(value); end
 
     sig { returns(T::Boolean) }
     def one?; end
 
-    sig { params(onlies: ::Symbol).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(onlies: ::Symbol).returns(::TableOne::ActiveRecord_Relation) }
     def only(*onlies); end
 
-    sig { params(args: ::String).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(args: ::String).returns(::TableOne::ActiveRecord_Relation) }
     def optimizer_hints(*args); end
 
-    sig { params(other: ::ActiveRecord::Relation).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(other: ::ActiveRecord::Relation).returns(::TableOne::ActiveRecord_Relation) }
     def or(other); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def order(arg, *args); end
 
-    sig { params(column_names: T.any(::Symbol, ::String)).returns(T.untyped) }
+    sig { params(column_names: T.any(::String, ::Symbol)).returns(T.untyped) }
     def pick(*column_names); end
 
-    sig { params(column_names: T.any(::Symbol, ::String)).returns(T::Array[T.untyped]) }
+    sig { params(column_names: T.any(::String, ::Symbol)).returns(T::Array[T.untyped]) }
     def pluck(*column_names); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def preload(arg, *args); end
 
     sig { params(columns_list: ::Symbol).returns(T.untyped) }
     def query_constraints(*columns_list); end
 
-    sig { params(locks: T::Boolean).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(locks: T::Boolean).returns(::TableOne::ActiveRecord_Relation) }
     def readonly(locks = true); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         table_names: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def references(arg, *table_names); end
 
@@ -428,7 +428,7 @@ class TableOne
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def regroup(arg, *args); end
 
@@ -436,7 +436,7 @@ class TableOne
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def reorder(arg, *args); end
 
@@ -444,58 +444,58 @@ class TableOne
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         fields: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def reselect(arg, *fields); end
 
-    sig { params(conditions: T.untyped).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(conditions: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
     def rewhere(conditions); end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def second; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def second!; end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def second_to_last; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def second_to_last!; end
 
     sig do
       params(
         field: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         fields: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def select(field, *fields); end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def sole; end
 
-    sig { params(value: T::Boolean).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(value: T::Boolean).returns(::TableOne::ActiveRecord_Relation) }
     def strict_loading(value = true); end
 
     sig { params(initial_value_or_column: T.any(::String, ::Symbol, ::Integer)).returns(T.untyped) }
     def sum(initial_value_or_column = 0); end
 
-    sig { params(limit: T.nilable(::Integer)).returns(T::Array[TableOne]) }
+    sig { params(limit: T.nilable(::Integer)).returns(T::Array[::TableOne]) }
     def take(limit = nil); end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def take!; end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def third; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def third!; end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def third_to_last; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def third_to_last!; end
 
     sig { params(names: T.untyped, time: T.nilable(Time)).returns(T.untyped) }
@@ -504,14 +504,14 @@ class TableOne
     sig do
       params(
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def unscope(*args); end
 
-    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[TableOne]) }
+    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[::TableOne]) }
     def update(id = :all, attributes); end
 
-    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[TableOne]) }
+    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[::TableOne]) }
     def update!(id = :all, attributes); end
 
     sig { params(updates: T.untyped).returns(T.untyped) }
@@ -541,18 +541,18 @@ class TableOne
     end
     def upsert_all(attributes, on_duplicate: :update, update_only: nil, returning: nil, unique_by: nil, record_timestamps: nil); end
 
-    sig { params(args: T.untyped).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
     def where(*args); end
 
     sig do
       params(
         arg: T::Hash[T.untyped, T.untyped],
         args: T::Hash[T.untyped, T.untyped]
-      ).returns(TableOne::ActiveRecord_Relation)
+      ).returns(::TableOne::ActiveRecord_Relation)
     end
     def with(arg, *args); end
 
-    sig { params(records: T::Enumerable[::ActiveRecord::Base]).returns(TableOne::ActiveRecord_Relation) }
+    sig { params(records: T::Enumerable[::ActiveRecord::Base]).returns(::TableOne::ActiveRecord_Relation) }
     def without(*records); end
   end
 
@@ -1032,7 +1032,7 @@ class TableOne
     sig { returns(T::Boolean) }
     def blank?; end
 
-    sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def build(arg = nil, &block); end
 
     sig { params(timestamp_column: T.untyped).returns(::String) }
@@ -1044,16 +1044,16 @@ class TableOne
     sig { params(timestamp_column: T.untyped).returns(::String) }
     def cache_version(timestamp_column = :updated_at); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def create(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def create!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def create_or_find_by(attributes, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def create_or_find_by!(attributes, &block); end
 
     sig { returns(T::Boolean) }
@@ -1068,17 +1068,55 @@ class TableOne
     sig { params(options: T.untyped).returns(::String) }
     def explain(*options); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.nilable(T::Boolean),
+        order: T.untyped,
+        block: T.nilable(T.proc.params(arg: ::TableOne).void)
+      ).returns(T::Enumerator[::TableOne])
+    end
+    def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.nilable(T::Boolean),
+        order: T.untyped,
+        block: T.nilable(T.proc.params(arg: ::TableOne).void)
+      ).returns(T::Enumerator[::TableOne])
+    end
+    def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def find_or_create_by(attributes, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def find_or_create_by!(attributes, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def find_or_initialize_by(attributes, &block); end
 
     sig { returns(T::Boolean) }
     def has_limit_or_offset?; end
+
+    sig do
+      params(
+        of: Integer,
+        start: T.untyped,
+        finish: T.untyped,
+        load: T::Boolean,
+        error_on_ignore: T.nilable(T::Boolean),
+        order: T.untyped,
+        use_ranges: T.nilable(T::Boolean),
+        block: T.nilable(T.proc.params(arg: ::TableOne).void)
+      ).returns(::ActiveRecord::Batches::BatchEnumerator)
+    end
+    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
 
     sig { returns(::String) }
     def inspect; end
@@ -1086,7 +1124,7 @@ class TableOne
     sig { returns(T::Array[T.untyped]) }
     def joined_includes_values; end
 
-    sig { returns(T::Class[TableOne]) }
+    sig { returns(T::Class[::TableOne]) }
     def klass; end
 
     sig { returns(T.self_type) }
@@ -1107,10 +1145,10 @@ class TableOne
     sig { returns(T::Boolean) }
     def many?; end
 
-    sig { returns(T::Class[TableOne]) }
+    sig { returns(T::Class[::TableOne]) }
     def model; end
 
-    sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: TableOne).void)).returns(TableOne) }
+    sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: ::TableOne).void)).returns(::TableOne) }
     def new(arg = nil, &block); end
 
     sig { returns(T::Boolean) }
@@ -1122,7 +1160,7 @@ class TableOne
     sig { params(relation: T.untyped).returns(T.self_type) }
     def preload_associations(relation); end
 
-    sig { returns(T::Array[TableOne]) }
+    sig { returns(T::Array[::TableOne]) }
     def records; end
 
     sig { returns(T.self_type) }
@@ -1143,10 +1181,10 @@ class TableOne
     sig { returns(::Arel::Table) }
     def table; end
 
-    sig { returns(T::Array[TableOne]) }
+    sig { returns(T::Array[::TableOne]) }
     def to_a; end
 
-    sig { returns(T::Array[TableOne]) }
+    sig { returns(T::Array[::TableOne]) }
     def to_ary; end
 
     sig { returns(::String) }
@@ -1232,40 +1270,40 @@ class TableOne
     sig { params(association: ::Symbol).returns(T::Array[T.untyped]) }
     def extract_associated(association); end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def fifth; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def fifth!; end
 
-    sig { params(args: T.untyped).returns(TableOne) }
+    sig { params(args: T.untyped).returns(::TableOne) }
     def find(*args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(T.nilable(TableOne)) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(T.nilable(::TableOne)) }
     def find_by(arg, *args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(TableOne) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(::TableOne) }
     def find_by!(arg, *args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(TableOne) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(::TableOne) }
     def find_sole_by(arg, *args); end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def first; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def first!; end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def forty_two; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def forty_two!; end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def fourth; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def fourth!; end
 
     sig { params(value: T.untyped, subquery_name: T.untyped).returns(ActiveRecord_Relation) }
@@ -1288,7 +1326,7 @@ class TableOne
     sig { params(column: T.any(::String, ::Symbol), values: T.untyped).returns(ActiveRecord_Relation) }
     def in_order_of(column, values); end
 
-    sig { params(record: T.nilable(TableOne)).returns(T::Boolean) }
+    sig { params(record: T.nilable(::TableOne)).returns(T::Boolean) }
     def include?(record); end
 
     sig do
@@ -1310,10 +1348,10 @@ class TableOne
     end
     def joins(arg, *args); end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def last; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def last!; end
 
     sig do
@@ -1341,7 +1379,7 @@ class TableOne
     sig { params(column_name: T.any(::String, ::Symbol)).returns(T.untyped) }
     def maximum(column_name); end
 
-    sig { params(record: T.nilable(TableOne)).returns(T::Boolean) }
+    sig { params(record: T.nilable(::TableOne)).returns(T::Boolean) }
     def member?(record); end
 
     sig { params(other: ::ActiveRecord::Relation, rest: ::ActiveRecord::Relation).returns(ActiveRecord_Relation) }
@@ -1428,16 +1466,16 @@ class TableOne
     sig { params(conditions: T.untyped).returns(ActiveRecord_Relation) }
     def rewhere(conditions); end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def second; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def second!; end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def second_to_last; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def second_to_last!; end
 
     sig do
@@ -1448,7 +1486,7 @@ class TableOne
     end
     def select(field, *fields); end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def sole; end
 
     sig { params(value: T::Boolean).returns(ActiveRecord_Relation) }
@@ -1460,22 +1498,22 @@ class TableOne
     sig { params(initial_value_or_column: T.any(::String, ::Symbol, ::Integer)).returns(T.untyped) }
     def sum(initial_value_or_column = 0); end
 
-    sig { params(limit: T.nilable(::Integer)).returns(T::Array[TableOne]) }
+    sig { params(limit: T.nilable(::Integer)).returns(T::Array[::TableOne]) }
     def take(limit = nil); end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def take!; end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def third; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def third!; end
 
-    sig { returns(T.nilable(TableOne)) }
+    sig { returns(T.nilable(::TableOne)) }
     def third_to_last; end
 
-    sig { returns(TableOne) }
+    sig { returns(::TableOne) }
     def third_to_last!; end
 
     sig { params(name: T.untyped).returns(ActiveRecord_Relation) }

@@ -7,13 +7,13 @@
 class Tag
   include ::Tag::GeneratedAttributeMethods
   include ::Tag::GeneratedAssociationMethods
-  extend GeneratedRelationMethods
+  extend ::Tag::GeneratedRelationMethods
 
   class << self
-    sig { params(other: ::ActiveRecord::Relation).returns(Tag::ActiveRecord_Relation) }
+    sig { params(other: ::ActiveRecord::Relation).returns(::Tag::ActiveRecord_Relation) }
     def and(other); end
 
-    sig { params(args: ::String).returns(Tag::ActiveRecord_Relation) }
+    sig { params(args: ::String).returns(::Tag::ActiveRecord_Relation) }
     def annotate(*args); end
 
     sig { params(args: T.untyped).returns(T::Boolean) }
@@ -47,10 +47,10 @@ class Tag
     sig { params(column_name: T.any(::String, ::Symbol)).returns(::ActiveRecord::Promise) }
     def async_minimum(column_name); end
 
-    sig { params(column_names: T.any(::Symbol, ::String)).returns(::ActiveRecord::Promise) }
+    sig { params(column_names: T.any(::String, ::Symbol)).returns(::ActiveRecord::Promise) }
     def async_pick(*column_names); end
 
-    sig { params(column_names: T.any(::Symbol, ::String)).returns(::ActiveRecord::Promise) }
+    sig { params(column_names: T.any(::String, ::Symbol)).returns(::ActiveRecord::Promise) }
     def async_pluck(*column_names); end
 
     sig { params(initial_value_or_column: T.any(::String, ::Symbol, ::Integer)).returns(::ActiveRecord::Promise) }
@@ -59,7 +59,7 @@ class Tag
     sig { params(column_name: T.any(::String, ::Symbol)).returns(T.untyped) }
     def average(column_name); end
 
-    sig { params(attributes: T.untyped, block: T.untyped).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.untyped).returns(::Tag) }
     def build(attributes = nil, &block); end
 
     sig { params(operation: ::Symbol, column_name: T.nilable(T.any(::String, ::Symbol))).returns(T.untyped) }
@@ -68,25 +68,25 @@ class Tag
     sig { params(column_name: T.nilable(T.any(::String, ::Symbol))).returns(::Integer) }
     def count(column_name = nil); end
 
-    sig { params(sql: String).returns(Integer) }
+    sig { params(sql: String).returns(::Integer) }
     def count_by_sql(sql); end
 
-    sig { params(attributes: T.untyped, block: T.untyped).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.untyped).returns(::Tag) }
     def create(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.untyped).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.untyped).returns(::Tag) }
     def create!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def create_or_find_by(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def create_or_find_by!(attributes = nil, &block); end
 
-    sig { params(other: T.untyped).returns(Tag::ActiveRecord_Relation) }
+    sig { params(other: T.untyped).returns(::Tag::ActiveRecord_Relation) }
     def create_with(other); end
 
-    sig { params(id_or_array: T.any(T.untyped, T::Array[T.untyped])).returns(::Integer) }
+    sig { params(id_or_array: T.untyped).returns(::Integer) }
     def delete(id_or_array); end
 
     sig { returns(T.untyped) }
@@ -95,7 +95,7 @@ class Tag
     sig { params(args: T.untyped).returns(T.untyped) }
     def delete_by(*args); end
 
-    sig { params(id: T.untyped).returns(Tag) }
+    sig { params(id: T.untyped).returns(::Tag) }
     def destroy(id); end
 
     sig { returns(T.untyped) }
@@ -104,44 +104,44 @@ class Tag
     sig { params(args: T.untyped).returns(T.untyped) }
     def destroy_by(*args); end
 
-    sig { params(value: T::Boolean).returns(Tag::ActiveRecord_Relation) }
+    sig { params(value: T::Boolean).returns(::Tag::ActiveRecord_Relation) }
     def distinct(value = false); end
 
     sig do
       params(
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def eager_load(*args); end
 
-    sig { params(skips: ::Symbol).returns(Tag::ActiveRecord_Relation) }
+    sig { params(skips: ::Symbol).returns(::Tag::ActiveRecord_Relation) }
     def except(*skips); end
 
-    sig { params(records: T::Enumerable[::ActiveRecord::Base]).returns(Tag::ActiveRecord_Relation) }
+    sig { params(records: T::Enumerable[::ActiveRecord::Base]).returns(::Tag::ActiveRecord_Relation) }
     def excluding(*records); end
 
     sig { params(args: T.untyped).returns(T::Boolean) }
     def exists?(args = :none); end
 
-    sig { params(modules: ::Module, block: T.untyped).returns(Tag::ActiveRecord_Relation) }
+    sig { params(modules: ::Module, block: T.untyped).returns(::Tag::ActiveRecord_Relation) }
     def extending(*modules, &block); end
 
     sig { params(association: ::Symbol).returns(T::Array[T.untyped]) }
     def extract_associated(association); end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def fifth; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def fifth!; end
 
-    sig { params(args: T.untyped).returns(Tag) }
+    sig { params(args: T.untyped).returns(::Tag) }
     def find(*args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(T.nilable(Tag)) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(T.nilable(::Tag)) }
     def find_by(arg, *args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(Tag) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(::Tag) }
     def find_by!(arg, *args); end
 
     sig do
@@ -150,7 +150,7 @@ class Tag
         binds: T.untyped,
         preparable: T.nilable(T::Boolean),
         block: T.untyped
-      ).returns(T::Array[Tag])
+      ).returns(T::Array[::Tag])
     end
     def find_by_sql(sql, binds = [], preparable: nil, &block); end
 
@@ -161,8 +161,8 @@ class Tag
         batch_size: Integer,
         error_on_ignore: T.nilable(T::Boolean),
         order: T.untyped,
-        block: T.nilable(T.proc.params(arg: Tag).void)
-      ).returns(T::Enumerator[Tag])
+        block: T.nilable(T.proc.params(arg: ::Tag).void)
+      ).returns(T::Enumerator[::Tag])
     end
     def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
 
@@ -173,71 +173,71 @@ class Tag
         batch_size: Integer,
         error_on_ignore: T.nilable(T::Boolean),
         order: T.untyped,
-        block: T.nilable(T.proc.params(arg: Tag).void)
-      ).returns(T::Enumerator[Tag])
+        block: T.nilable(T.proc.params(arg: ::Tag).void)
+      ).returns(T::Enumerator[::Tag])
     end
     def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def find_or_create_by(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def find_or_create_by!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def find_or_initialize_by(attributes = nil, &block); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(Tag) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(::Tag) }
     def find_sole_by(arg, *args); end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def first; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def first!; end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def first_or_create(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def first_or_create(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def first_or_create!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def first_or_create!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def first_or_initialize(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def first_or_initialize(attributes = nil, &block); end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def forty_two; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def forty_two!; end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def fourth; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def fourth!; end
 
-    sig { params(value: T.untyped, subquery_name: T.untyped).returns(Tag::ActiveRecord_Relation) }
+    sig { params(value: T.untyped, subquery_name: T.untyped).returns(::Tag::ActiveRecord_Relation) }
     def from(value, subquery_name = nil); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def group(arg, *args); end
 
-    sig { params(opts: ::String, rest: T.untyped).returns(Tag::ActiveRecord_Relation) }
+    sig { params(opts: ::String, rest: T.untyped).returns(::Tag::ActiveRecord_Relation) }
     def having(opts, *rest); end
 
     sig { returns(T::Array[T.untyped]) }
@@ -252,19 +252,19 @@ class Tag
         error_on_ignore: T.nilable(T::Boolean),
         order: T.untyped,
         use_ranges: T.nilable(T::Boolean),
-        block: T.nilable(T.proc.params(arg: Tag).void)
-      ).returns(T::Enumerator[Tag])
+        block: T.nilable(T.proc.params(arg: ::Tag).void)
+      ).returns(T::Enumerator[::Tag])
     end
     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
 
-    sig { params(column: T.any(::String, ::Symbol), values: T.untyped).returns(Tag::ActiveRecord_Relation) }
+    sig { params(column: T.any(::String, ::Symbol), values: T.untyped).returns(::Tag::ActiveRecord_Relation) }
     def in_order_of(column, values); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def includes(arg, *args); end
 
@@ -308,31 +308,31 @@ class Tag
     end
     def insert_all!(attributes, returning = nil, unique_by = nil, record_timestamps = nil); end
 
-    sig { params(attributes: T.untyped, column_types: T.untyped, block: T.untyped).returns(Tag) }
+    sig { params(attributes: T.untyped, column_types: T.untyped, block: T.untyped).returns(::Tag) }
     def instantiate(attributes, column_types = {}, &block); end
 
-    sig { returns(Tag::ActiveRecord_Relation) }
+    sig { returns(::Tag::ActiveRecord_Relation) }
     def invert_where; end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def joins(arg, *args); end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def last; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def last!; end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def left_joins(arg, *args); end
 
@@ -340,14 +340,14 @@ class Tag
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def left_outer_joins(arg, *args); end
 
-    sig { params(value: ::Integer).returns(Tag::ActiveRecord_Relation) }
+    sig { params(value: ::Integer).returns(::Tag::ActiveRecord_Relation) }
     def limit(value); end
 
-    sig { params(locks: T::Boolean).returns(Tag::ActiveRecord_Relation) }
+    sig { params(locks: T::Boolean).returns(::Tag::ActiveRecord_Relation) }
     def lock(locks = true); end
 
     sig { params(args: T.untyped).returns(T::Boolean) }
@@ -356,66 +356,71 @@ class Tag
     sig { params(column_name: T.any(::String, ::Symbol)).returns(T.untyped) }
     def maximum(column_name); end
 
-    sig { params(other: ::ActiveRecord::Relation, rest: ::ActiveRecord::Relation).returns(Tag::ActiveRecord_Relation) }
+    sig do
+      params(
+        other: ::ActiveRecord::Relation,
+        rest: ::ActiveRecord::Relation
+      ).returns(::Tag::ActiveRecord_Relation)
+    end
     def merge(other, *rest); end
 
     sig { params(column_name: T.any(::String, ::Symbol)).returns(T.untyped) }
     def minimum(column_name); end
 
-    sig { returns(Tag::ActiveRecord_Relation) }
+    sig { returns(::Tag::ActiveRecord_Relation) }
     def none; end
 
     sig { params(args: T.untyped).returns(T::Boolean) }
     def none?(*args); end
 
-    sig { params(value: ::Integer).returns(Tag::ActiveRecord_Relation) }
+    sig { params(value: ::Integer).returns(::Tag::ActiveRecord_Relation) }
     def offset(value); end
 
     sig { returns(T::Boolean) }
     def one?; end
 
-    sig { params(onlies: ::Symbol).returns(Tag::ActiveRecord_Relation) }
+    sig { params(onlies: ::Symbol).returns(::Tag::ActiveRecord_Relation) }
     def only(*onlies); end
 
-    sig { params(args: ::String).returns(Tag::ActiveRecord_Relation) }
+    sig { params(args: ::String).returns(::Tag::ActiveRecord_Relation) }
     def optimizer_hints(*args); end
 
-    sig { params(other: ::ActiveRecord::Relation).returns(Tag::ActiveRecord_Relation) }
+    sig { params(other: ::ActiveRecord::Relation).returns(::Tag::ActiveRecord_Relation) }
     def or(other); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def order(arg, *args); end
 
-    sig { params(column_names: T.any(::Symbol, ::String)).returns(T.untyped) }
+    sig { params(column_names: T.any(::String, ::Symbol)).returns(T.untyped) }
     def pick(*column_names); end
 
-    sig { params(column_names: T.any(::Symbol, ::String)).returns(T::Array[T.untyped]) }
+    sig { params(column_names: T.any(::String, ::Symbol)).returns(T::Array[T.untyped]) }
     def pluck(*column_names); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def preload(arg, *args); end
 
     sig { params(columns_list: ::Symbol).returns(T.untyped) }
     def query_constraints(*columns_list); end
 
-    sig { params(locks: T::Boolean).returns(Tag::ActiveRecord_Relation) }
+    sig { params(locks: T::Boolean).returns(::Tag::ActiveRecord_Relation) }
     def readonly(locks = true); end
 
     sig do
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         table_names: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def references(arg, *table_names); end
 
@@ -423,7 +428,7 @@ class Tag
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def regroup(arg, *args); end
 
@@ -431,7 +436,7 @@ class Tag
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)]),
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.any(::String, ::Symbol)])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def reorder(arg, *args); end
 
@@ -439,58 +444,58 @@ class Tag
       params(
         arg: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         fields: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def reselect(arg, *fields); end
 
-    sig { params(conditions: T.untyped).returns(Tag::ActiveRecord_Relation) }
+    sig { params(conditions: T.untyped).returns(::Tag::ActiveRecord_Relation) }
     def rewhere(conditions); end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def second; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def second!; end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def second_to_last; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def second_to_last!; end
 
     sig do
       params(
         field: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped]),
         fields: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def select(field, *fields); end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def sole; end
 
-    sig { params(value: T::Boolean).returns(Tag::ActiveRecord_Relation) }
+    sig { params(value: T::Boolean).returns(::Tag::ActiveRecord_Relation) }
     def strict_loading(value = true); end
 
     sig { params(initial_value_or_column: T.any(::String, ::Symbol, ::Integer)).returns(T.untyped) }
     def sum(initial_value_or_column = 0); end
 
-    sig { params(limit: T.nilable(::Integer)).returns(T::Array[Tag]) }
+    sig { params(limit: T.nilable(::Integer)).returns(T::Array[::Tag]) }
     def take(limit = nil); end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def take!; end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def third; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def third!; end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def third_to_last; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def third_to_last!; end
 
     sig { params(names: T.untyped, time: T.nilable(Time)).returns(T.untyped) }
@@ -499,14 +504,14 @@ class Tag
     sig do
       params(
         args: T.any(::String, ::Symbol, T::Hash[T.any(::String, ::Symbol), T.untyped])
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def unscope(*args); end
 
-    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[Tag]) }
+    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[::Tag]) }
     def update(id = :all, attributes); end
 
-    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[Tag]) }
+    sig { params(id: T.untyped, attributes: T.untyped).returns(T::Array[::Tag]) }
     def update!(id = :all, attributes); end
 
     sig { params(updates: T.untyped).returns(T.untyped) }
@@ -536,18 +541,18 @@ class Tag
     end
     def upsert_all(attributes, on_duplicate: :update, update_only: nil, returning: nil, unique_by: nil, record_timestamps: nil); end
 
-    sig { params(args: T.untyped).returns(Tag::ActiveRecord_Relation) }
+    sig { params(args: T.untyped).returns(::Tag::ActiveRecord_Relation) }
     def where(*args); end
 
     sig do
       params(
         arg: T::Hash[T.untyped, T.untyped],
         args: T::Hash[T.untyped, T.untyped]
-      ).returns(Tag::ActiveRecord_Relation)
+      ).returns(::Tag::ActiveRecord_Relation)
     end
     def with(arg, *args); end
 
-    sig { params(records: T::Enumerable[::ActiveRecord::Base]).returns(Tag::ActiveRecord_Relation) }
+    sig { params(records: T::Enumerable[::ActiveRecord::Base]).returns(::Tag::ActiveRecord_Relation) }
     def without(*records); end
   end
 
@@ -925,7 +930,7 @@ class Tag
     sig { returns(T::Boolean) }
     def blank?; end
 
-    sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def build(arg = nil, &block); end
 
     sig { params(timestamp_column: T.untyped).returns(::String) }
@@ -937,16 +942,16 @@ class Tag
     sig { params(timestamp_column: T.untyped).returns(::String) }
     def cache_version(timestamp_column = :updated_at); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def create(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def create!(attributes = nil, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def create_or_find_by(attributes, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def create_or_find_by!(attributes, &block); end
 
     sig { returns(T::Boolean) }
@@ -961,17 +966,55 @@ class Tag
     sig { params(options: T.untyped).returns(::String) }
     def explain(*options); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.nilable(T::Boolean),
+        order: T.untyped,
+        block: T.nilable(T.proc.params(arg: ::Tag).void)
+      ).returns(T::Enumerator[::Tag])
+    end
+    def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig do
+      params(
+        start: T.untyped,
+        finish: T.untyped,
+        batch_size: Integer,
+        error_on_ignore: T.nilable(T::Boolean),
+        order: T.untyped,
+        block: T.nilable(T.proc.params(arg: ::Tag).void)
+      ).returns(T::Enumerator[::Tag])
+    end
+    def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
+
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def find_or_create_by(attributes, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def find_or_create_by!(attributes, &block); end
 
-    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def find_or_initialize_by(attributes, &block); end
 
     sig { returns(T::Boolean) }
     def has_limit_or_offset?; end
+
+    sig do
+      params(
+        of: Integer,
+        start: T.untyped,
+        finish: T.untyped,
+        load: T::Boolean,
+        error_on_ignore: T.nilable(T::Boolean),
+        order: T.untyped,
+        use_ranges: T.nilable(T::Boolean),
+        block: T.nilable(T.proc.params(arg: ::Tag).void)
+      ).returns(::ActiveRecord::Batches::BatchEnumerator)
+    end
+    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
 
     sig { returns(::String) }
     def inspect; end
@@ -979,7 +1022,7 @@ class Tag
     sig { returns(T::Array[T.untyped]) }
     def joined_includes_values; end
 
-    sig { returns(T::Class[Tag]) }
+    sig { returns(T::Class[::Tag]) }
     def klass; end
 
     sig { returns(T.self_type) }
@@ -1000,10 +1043,10 @@ class Tag
     sig { returns(T::Boolean) }
     def many?; end
 
-    sig { returns(T::Class[Tag]) }
+    sig { returns(T::Class[::Tag]) }
     def model; end
 
-    sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: Tag).void)).returns(Tag) }
+    sig { params(arg: T.untyped, block: T.nilable(T.proc.params(arg: ::Tag).void)).returns(::Tag) }
     def new(arg = nil, &block); end
 
     sig { returns(T::Boolean) }
@@ -1015,7 +1058,7 @@ class Tag
     sig { params(relation: T.untyped).returns(T.self_type) }
     def preload_associations(relation); end
 
-    sig { returns(T::Array[Tag]) }
+    sig { returns(T::Array[::Tag]) }
     def records; end
 
     sig { returns(T.self_type) }
@@ -1036,10 +1079,10 @@ class Tag
     sig { returns(::Arel::Table) }
     def table; end
 
-    sig { returns(T::Array[Tag]) }
+    sig { returns(T::Array[::Tag]) }
     def to_a; end
 
-    sig { returns(T::Array[Tag]) }
+    sig { returns(T::Array[::Tag]) }
     def to_ary; end
 
     sig { returns(::String) }
@@ -1125,40 +1168,40 @@ class Tag
     sig { params(association: ::Symbol).returns(T::Array[T.untyped]) }
     def extract_associated(association); end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def fifth; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def fifth!; end
 
-    sig { params(args: T.untyped).returns(Tag) }
+    sig { params(args: T.untyped).returns(::Tag) }
     def find(*args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(T.nilable(Tag)) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(T.nilable(::Tag)) }
     def find_by(arg, *args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(Tag) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(::Tag) }
     def find_by!(arg, *args); end
 
-    sig { params(arg: T.untyped, args: T.untyped).returns(Tag) }
+    sig { params(arg: T.untyped, args: T.untyped).returns(::Tag) }
     def find_sole_by(arg, *args); end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def first; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def first!; end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def forty_two; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def forty_two!; end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def fourth; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def fourth!; end
 
     sig { params(value: T.untyped, subquery_name: T.untyped).returns(ActiveRecord_Relation) }
@@ -1181,7 +1224,7 @@ class Tag
     sig { params(column: T.any(::String, ::Symbol), values: T.untyped).returns(ActiveRecord_Relation) }
     def in_order_of(column, values); end
 
-    sig { params(record: T.nilable(Tag)).returns(T::Boolean) }
+    sig { params(record: T.nilable(::Tag)).returns(T::Boolean) }
     def include?(record); end
 
     sig do
@@ -1203,10 +1246,10 @@ class Tag
     end
     def joins(arg, *args); end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def last; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def last!; end
 
     sig do
@@ -1234,7 +1277,7 @@ class Tag
     sig { params(column_name: T.any(::String, ::Symbol)).returns(T.untyped) }
     def maximum(column_name); end
 
-    sig { params(record: T.nilable(Tag)).returns(T::Boolean) }
+    sig { params(record: T.nilable(::Tag)).returns(T::Boolean) }
     def member?(record); end
 
     sig { params(other: ::ActiveRecord::Relation, rest: ::ActiveRecord::Relation).returns(ActiveRecord_Relation) }
@@ -1321,16 +1364,16 @@ class Tag
     sig { params(conditions: T.untyped).returns(ActiveRecord_Relation) }
     def rewhere(conditions); end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def second; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def second!; end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def second_to_last; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def second_to_last!; end
 
     sig do
@@ -1341,7 +1384,7 @@ class Tag
     end
     def select(field, *fields); end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def sole; end
 
     sig { params(value: T::Boolean).returns(ActiveRecord_Relation) }
@@ -1353,22 +1396,22 @@ class Tag
     sig { params(initial_value_or_column: T.any(::String, ::Symbol, ::Integer)).returns(T.untyped) }
     def sum(initial_value_or_column = 0); end
 
-    sig { params(limit: T.nilable(::Integer)).returns(T::Array[Tag]) }
+    sig { params(limit: T.nilable(::Integer)).returns(T::Array[::Tag]) }
     def take(limit = nil); end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def take!; end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def third; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def third!; end
 
-    sig { returns(T.nilable(Tag)) }
+    sig { returns(T.nilable(::Tag)) }
     def third_to_last; end
 
-    sig { returns(Tag) }
+    sig { returns(::Tag) }
     def third_to_last!; end
 
     sig { params(name: T.untyped).returns(ActiveRecord_Relation) }

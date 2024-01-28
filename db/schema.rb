@@ -19,11 +19,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_21_172138) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "post_tag_relations", charset: "utf8mb4", force: :cascade do |t|
+  create_table "post_tag_relations", primary_key: ["post_id", "tag_id"], charset: "utf8mb4", comment: "post_tag_relations", force: :cascade do |t|
     t.bigint "post_id", null: false
     t.bigint "tag_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["post_id", "tag_id"], name: "index_post_tag_relations_on_post_id_and_tag_id", unique: true
     t.index ["post_id"], name: "index_post_tag_relations_on_post_id"
     t.index ["tag_id"], name: "index_post_tag_relations_on_tag_id"
   end
@@ -37,7 +38,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_21_172138) do
     t.index ["author_id"], name: "index_posts_on_author_id"
   end
 
-  create_table "table_ones", charset: "utf8mb4", force: :cascade do |t|
+  create_table "table_ones", charset: "utf8mb4", comment: "table_ones", force: :cascade do |t|
     t.string "string_non_null", null: false
     t.string "string_nullable"
     t.integer "integer_non_null", null: false
@@ -46,7 +47,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_21_172138) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "tags", charset: "utf8mb4", force: :cascade do |t|
+  create_table "tags", charset: "utf8mb4", comment: "tags", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
     t.datetime "created_at", null: false
