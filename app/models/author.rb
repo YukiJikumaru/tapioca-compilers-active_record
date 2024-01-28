@@ -27,7 +27,13 @@ class Author < ApplicationRecord
 
     T.assert_type!(where(id: 0).id_1, ::Author::ActiveRecord_Relation)
     T.assert_type!(where(id: 0).id_n, ::Author::ActiveRecord_Relation)
+  end
 
+  def test_scope
+    test_only!
+
+    posts
+    T.assert_type!(self.posts.id_n(1), ::Post::ActiveRecord_Relation)
   end
 
   def test_generated_attribute_methods

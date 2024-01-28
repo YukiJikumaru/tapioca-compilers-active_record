@@ -111,7 +111,7 @@ module Tapioca
 
           create_active_record_relation(rbi_scope, activerecord_model)
 
-          create_active_record_associations_collection_proxy(rbi_scope)
+          create_active_record_associations_collection_proxy(rbi_scope, activerecord_model)
           create_active_record_association_relation(rbi_scope)
           if ar_gteq('7')
             create_active_record_disable_joins_association_relation(rbi_scope)
@@ -634,6 +634,7 @@ module Tapioca
         # Overwrite ::ActiveRecord::Relation's instant methods.
         # We DONOT Trust and Depend on Tapioca
         ar_relation.create_method('any?', return_type: T_BOOLEAN)
+        ar_relation.create_method('all', return_type: T_SELF)
         ar_relation.create_method('blank?', return_type: T_BOOLEAN)
         ar_relation.create_method('build', parameters: [create_opt_param('arg', type: T_UNTYPED, default: 'nil'), create_block_param('block', type: common_block_param)], return_type: model_name)
         ar_relation.create_method('cache_key', parameters: [create_opt_param('timestamp_column', type: T_UNTYPED, default: "'updated_at'")], return_type: '::String')
@@ -702,6 +703,14 @@ module Tapioca
         ar_relation.create_method('model', return_type: "T::Class[#{model_name}]")
         ar_relation.create_method('new', parameters: [create_opt_param('arg', type: T_UNTYPED, default: 'nil'), create_block_param('block', type: common_block_param)], return_type: model_name)
         ar_relation.create_method('none?', return_type: T_BOOLEAN)
+
+        # @TODO
+        # # ERROR method_missing
+        # Post.where(id: 1).not(name: 'xxx')
+        # # OK
+        # Post.where(id: 1).where.not(name: 'xxx')
+        ar_relation.create_method('not', parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: T_SELF)
+
         ar_relation.create_method('one?', return_type: T_BOOLEAN)
         ar_relation.create_method('preload_associations', parameters: [create_param('relation', type: T_UNTYPED)], return_type: T_SELF)
         ar_relation.create_method('records', return_type: as_array(model_name))
@@ -744,10 +753,16 @@ module Tapioca
 
       # @TODO
       # class Post::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
-      sig { params(rbi_scope: ::RBI::Scope).void }
-      def create_active_record_associations_collection_proxy(rbi_scope)
+      sig { params(rbi_scope: ::RBI::Scope, activerecord_model: ConstantType).void }
+      def create_active_record_associations_collection_proxy(rbi_scope, activerecord_model)
         collection_proxy = rbi_scope.create_class('ActiveRecord_Associations_CollectionProxy', superclass_name: '::ActiveRecord::Associations::CollectionProxy')
         collection_proxy.create_include(GENERATED_RELATION_METHODS_NAME)
+
+        # SCOPE!!!
+        scope_names(activerecord_model).each do |scope_name|
+          collection_proxy.create_method(scope_name, parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: fqcn("#{activerecord_model.name}::#{ACTIVERECORD_RELATION_NAME}"))
+        end
+
       end
 
       # @TODO

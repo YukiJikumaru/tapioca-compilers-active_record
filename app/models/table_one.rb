@@ -81,6 +81,7 @@ class TableOne < ApplicationRecord
     relation = TableOne.where(id: 0)
     T.assert_type!(relation, ::TableOne::ActiveRecord_Relation)
     T.assert_type!(relation.any?, T::Boolean)
+    T.assert_type!(relation.all, ::TableOne::ActiveRecord_Relation)
     T.assert_type!(relation.blank?, T::Boolean)
     T.assert_type!(relation.build({}), ::TableOne)
     T.assert_type!(relation.build({}) { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
@@ -130,6 +131,7 @@ class TableOne < ApplicationRecord
     T.assert_type!(relation.new { |arg| T.assert_type!(arg, ::TableOne) }, ::TableOne)
     T.assert_type!(relation.none, ::TableOne::ActiveRecord_Relation)
     T.assert_type!(relation.none?, T::Boolean)
+    T.assert_type!(relation.where.not(id: 1), ::TableOne::ActiveRecord_Relation)
     T.assert_type!(relation.one?, T::Boolean)
     relation.predicate_builder
     T.assert_type!(relation.preload_associations(relation), ::TableOne::ActiveRecord_Relation)

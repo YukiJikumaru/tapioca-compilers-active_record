@@ -240,6 +240,9 @@ class Post
     sig { params(opts: ::String, rest: T.untyped).returns(::Post::ActiveRecord_Relation) }
     def having(opts, *rest); end
 
+    sig { params(args: T.untyped).returns(::Post::ActiveRecord_Relation) }
+    def id_n(*args); end
+
     sig { returns(T::Array[T.untyped]) }
     def ids; end
 
@@ -1011,6 +1014,9 @@ class Post
 
   class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
     include GeneratedRelationMethods
+
+    sig { params(args: T.untyped).returns(::Post::ActiveRecord_Relation) }
+    def id_n(*args); end
   end
 
   class ActiveRecord_DisableJoinsAssociationRelation < ::ActiveRecord::DisableJoinsAssociationRelation
@@ -1019,6 +1025,9 @@ class Post
 
   class ActiveRecord_Relation < ::ActiveRecord::Relation
     include GeneratedRelationMethods
+
+    sig { returns(T.self_type) }
+    def all; end
 
     sig { returns(T::Boolean) }
     def any?; end
@@ -1098,6 +1107,9 @@ class Post
     sig { returns(T::Boolean) }
     def has_limit_or_offset?; end
 
+    sig { params(args: T.untyped).returns(::Post::ActiveRecord_Relation) }
+    def id_n(*args); end
+
     sig do
       params(
         of: Integer,
@@ -1147,6 +1159,9 @@ class Post
 
     sig { returns(T::Boolean) }
     def none?; end
+
+    sig { params(args: T.untyped).returns(T.self_type) }
+    def not(*args); end
 
     sig { returns(T::Boolean) }
     def one?; end

@@ -9,6 +9,8 @@ class Post < ApplicationRecord
 
   alias_attribute :title_x, :title
 
+  scope :id_n, ->(n) { where(id: n) }
+
   def test_attribute
     test_only!
     # T.assert_type!(price_in_cents, ::Integer)
@@ -17,6 +19,12 @@ class Post < ApplicationRecord
   def test_alias_attribute
     test_only!
     # T.assert_type!(title_x, ::String)
+  end
+
+  def test_where_not
+    test_only!
+
+    T.assert_type!(Post.where(id: 1).where.not(id: 1), ::Post::ActiveRecord_Relation)
   end
 
   def test_belongs_to_associations

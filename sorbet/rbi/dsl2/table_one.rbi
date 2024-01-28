@@ -1038,6 +1038,27 @@ class TableOne
 
   class ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
     include GeneratedRelationMethods
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test1(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test2(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test3(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test4(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test5(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test6(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test7(*args); end
   end
 
   class ActiveRecord_DisableJoinsAssociationRelation < ::ActiveRecord::DisableJoinsAssociationRelation
@@ -1046,6 +1067,9 @@ class TableOne
 
   class ActiveRecord_Relation < ::ActiveRecord::Relation
     include GeneratedRelationMethods
+
+    sig { returns(T.self_type) }
+    def all; end
 
     sig { returns(T::Boolean) }
     def any?; end
@@ -1174,6 +1198,9 @@ class TableOne
 
     sig { returns(T::Boolean) }
     def none?; end
+
+    sig { params(args: T.untyped).returns(T.self_type) }
+    def not(*args); end
 
     sig { returns(T::Boolean) }
     def one?; end

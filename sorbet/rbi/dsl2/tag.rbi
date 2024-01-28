@@ -924,6 +924,9 @@ class Tag
   class ActiveRecord_Relation < ::ActiveRecord::Relation
     include GeneratedRelationMethods
 
+    sig { returns(T.self_type) }
+    def all; end
+
     sig { returns(T::Boolean) }
     def any?; end
 
@@ -1051,6 +1054,9 @@ class Tag
 
     sig { returns(T::Boolean) }
     def none?; end
+
+    sig { params(args: T.untyped).returns(T.self_type) }
+    def not(*args); end
 
     sig { returns(T::Boolean) }
     def one?; end
