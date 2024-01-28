@@ -1065,6 +1065,12 @@ class Author
     sig { returns(T::Boolean) }
     def has_limit_or_offset?; end
 
+    sig { params(args: T.untyped).returns(::Author::ActiveRecord_Relation) }
+    def id_1(*args); end
+
+    sig { params(args: T.untyped).returns(::Author::ActiveRecord_Relation) }
+    def id_n(*args); end
+
     sig do
       params(
         of: Integer,

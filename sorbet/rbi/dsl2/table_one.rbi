@@ -1202,6 +1202,27 @@ class TableOne
     sig { returns(::Arel::Table) }
     def table; end
 
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test1(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test2(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test3(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test4(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test5(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test6(*args); end
+
+    sig { params(args: T.untyped).returns(::TableOne::ActiveRecord_Relation) }
+    def test7(*args); end
+
     sig { returns(T::Array[::TableOne]) }
     def to_a; end
 

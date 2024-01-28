@@ -113,15 +113,14 @@ module Tapioca
 
           create_active_record_associations_collection_proxy(rbi_scope)
           create_active_record_association_relation(rbi_scope)
-          create_active_record_disable_joins_association_relation(rbi_scope)
+          if ar_gteq('7')
+            create_active_record_disable_joins_association_relation(rbi_scope)
+          end
         end
       end
 
-      # sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_named_scope.rb
-      sig { params(rbi_scope: ::RBI::Scope, activerecord_model: ConstantType).void }
-      def populate_scope_methods(rbi_scope, activerecord_model)
-        model_name = rbi_scope.fully_qualified_name
-
+      def scope_names(activerecord_model)
+        method_names = []
         # Named scope methods are dynamically defined by the `scope` method so their
         # source_location is `lib/active_record/scoping/named.rb`. So we find scopes
         # by two criteria:
@@ -143,7 +142,18 @@ module Tapioca
           source_file = method_obj.source_location[0]
           next unless source_file.include?('lib/active_record/scoping/named.rb')
 
-          rbi_scope.create_method(method_name.to_s, parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: "#{model_name}::#{ACTIVERECORD_RELATION_NAME}", class_method: true)
+          method_names << method_name.to_s
+        end
+
+        method_names
+      end
+
+      # sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_named_scope.rb
+      sig { params(rbi_scope: ::RBI::Scope, activerecord_model: ConstantType).void }
+      def populate_scope_methods(rbi_scope, activerecord_model)
+        model_name = rbi_scope.fully_qualified_name
+        scope_names(activerecord_model).each do |scope_name|
+          rbi_scope.create_method(scope_name, parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: fqcn("#{model_name}::#{ACTIVERECORD_RELATION_NAME}"), class_method: true)
         end
       end
 
@@ -614,7 +624,9 @@ module Tapioca
       def create_active_record_relation(rbi_scope, activerecord_model)
         model_name = fqcn(activerecord_model.name.to_s)
         ar_relation = rbi_scope.create_class(ACTIVERECORD_RELATION_NAME, superclass_name: '::ActiveRecord::Relation')
-
+        scope_names(activerecord_model).each do |scope_name|
+          ar_relation.create_method(scope_name, parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: ar_relation.fully_qualified_name)
+        end
         ar_relation.create_include(GENERATED_RELATION_METHODS_NAME)
 
         common_block_param = as_nilable_type("T.proc.params(arg: #{model_name}).void")

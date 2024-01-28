@@ -23,6 +23,11 @@ class Author < ApplicationRecord
     # @TODO parametersの定義 AST見ないと無理
     T.assert_type!(id_1, ::Author::ActiveRecord_Relation)
     T.assert_type!(id_n, ::Author::ActiveRecord_Relation)
+    where(id: 0).id_1
+
+    T.assert_type!(where(id: 0).id_1, ::Author::ActiveRecord_Relation)
+    T.assert_type!(where(id: 0).id_n, ::Author::ActiveRecord_Relation)
+
   end
 
   def test_generated_attribute_methods
