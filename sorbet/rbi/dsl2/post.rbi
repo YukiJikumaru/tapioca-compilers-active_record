@@ -557,51 +557,61 @@ class Post
   end
 
   module ::Post::GeneratedAssociationMethods
-    sig { returns(T.nilable(Post)) }
+    sig { returns(T.nilable(::Author)) }
     def author; end
 
-    sig { params(value: T.nilable(Post)).returns(T.nilable(Post)) }
+    sig { params(value: T.nilable(::Author)).returns(T.untyped) }
     def author=(value); end
 
-    sig { params(value: T::Hash[T.untyped, T.untyped], blk: T.proc.bind(Post).params(arg: Post).void).returns(Post) }
+    sig do
+      params(
+        value: T::Hash[T.untyped, T.untyped],
+        blk: T.nilable(T.proc.bind(::Author).params(arg: ::Author).void)
+      ).returns(::Author)
+    end
     def build_author(value = {}, &blk); end
 
     sig do
       params(
         value: T::Hash[T.untyped, T.untyped],
-        blk: T.proc.bind(Post).params(arg: Post).void
-      ).returns(T.nilable(Post))
+        blk: T.nilable(T.proc.bind(::Author).params(arg: ::Author).void)
+      ).returns(T.nilable(::Author))
     end
     def create_author(value = {}, &blk); end
 
-    sig { params(value: T::Hash[T.untyped, T.untyped], blk: T.proc.bind(Post).params(arg: Post).void).returns(Post) }
+    sig do
+      params(
+        value: T::Hash[T.untyped, T.untyped],
+        blk: T.nilable(T.proc.bind(::Author).params(arg: ::Author).void)
+      ).returns(::Author)
+    end
     def create_author!(value = {}, &blk); end
 
-    sig { params(value: T::Enumerable[Post]).returns(::Post::ActiveRecord_Associations_CollectionProxy) }
-    def post_tag_relations=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
-    def post_tag_relations_ids; end
-
-    sig { params(values: T::Enumerable[T.untyped]).returns(T::Array[T.untyped]) }
-    def post_tag_relations_ids=(values); end
-
-    sig { returns(T.nilable(Post)) }
-    def reload_author; end
-
-    sig { returns(::Post::ActiveRecord_Associations_CollectionProxy) }
+    sig { returns(::PostTagRelation::ActiveRecord_Associations_CollectionProxy) }
     def post_tag_relations; end
 
-    sig { returns(::Post::ActiveRecord_Associations_CollectionProxy) }
+    sig { params(value: T::Enumerable[::PostTagRelation]).returns(T.untyped) }
+    def post_tag_relations=(value); end
+
+    sig { returns(T::Array[[::Integer, ::Integer]]) }
+    def post_tag_relations_ids; end
+
+    sig { params(values: T::Enumerable[[::Integer, ::Integer]]).returns(T.untyped) }
+    def post_tag_relations_ids=(values); end
+
+    sig { returns(T.nilable(::Author)) }
+    def reload_author; end
+
+    sig { returns(::Tag::ActiveRecord_Associations_CollectionProxy) }
     def tags; end
 
-    sig { params(value: T::Enumerable[Post]).returns(::Post::ActiveRecord_Associations_CollectionProxy) }
+    sig { params(value: T::Enumerable[::Tag]).returns(T.untyped) }
     def tags=(value); end
 
-    sig { returns(T::Array[T.untyped]) }
+    sig { returns(T::Array[::Integer]) }
     def tags_ids; end
 
-    sig { params(values: T::Enumerable[T.untyped]).returns(T::Array[T.untyped]) }
+    sig { params(values: T::Enumerable[::Integer]).returns(T.untyped) }
     def tags_ids=(values); end
   end
 

@@ -617,70 +617,70 @@ class PostTagRelation
   end
 
   module ::PostTagRelation::GeneratedAssociationMethods
-    sig { returns(PostTagRelation) }
-    def post; end
-
     sig do
       params(
         value: T::Hash[T.untyped, T.untyped],
-        blk: T.proc.bind(PostTagRelation).params(arg: PostTagRelation).void
-      ).returns(PostTagRelation)
+        blk: T.nilable(T.proc.bind(::Post).params(arg: ::Post).void)
+      ).returns(::Post)
     end
     def build_post(value = {}, &blk); end
 
     sig do
       params(
         value: T::Hash[T.untyped, T.untyped],
-        blk: T.proc.bind(PostTagRelation).params(arg: PostTagRelation).void
-      ).returns(PostTagRelation)
-    end
-    def create_post(value = {}, &blk); end
-
-    sig do
-      params(
-        value: T::Hash[T.untyped, T.untyped],
-        blk: T.proc.bind(PostTagRelation).params(arg: PostTagRelation).void
-      ).returns(PostTagRelation)
-    end
-    def create_post!(value = {}, &blk); end
-
-    sig { params(value: PostTagRelation).returns(PostTagRelation) }
-    def post=(value); end
-
-    sig { returns(PostTagRelation) }
-    def reload_post; end
-
-    sig { returns(PostTagRelation) }
-    def tag; end
-
-    sig do
-      params(
-        value: T::Hash[T.untyped, T.untyped],
-        blk: T.proc.bind(PostTagRelation).params(arg: PostTagRelation).void
-      ).returns(PostTagRelation)
+        blk: T.nilable(T.proc.bind(::Tag).params(arg: ::Tag).void)
+      ).returns(::Tag)
     end
     def build_tag(value = {}, &blk); end
 
     sig do
       params(
         value: T::Hash[T.untyped, T.untyped],
-        blk: T.proc.bind(PostTagRelation).params(arg: PostTagRelation).void
-      ).returns(PostTagRelation)
+        blk: T.nilable(T.proc.bind(::Post).params(arg: ::Post).void)
+      ).returns(::Post)
+    end
+    def create_post(value = {}, &blk); end
+
+    sig do
+      params(
+        value: T::Hash[T.untyped, T.untyped],
+        blk: T.nilable(T.proc.bind(::Post).params(arg: ::Post).void)
+      ).returns(::Post)
+    end
+    def create_post!(value = {}, &blk); end
+
+    sig do
+      params(
+        value: T::Hash[T.untyped, T.untyped],
+        blk: T.nilable(T.proc.bind(::Tag).params(arg: ::Tag).void)
+      ).returns(::Tag)
     end
     def create_tag(value = {}, &blk); end
 
     sig do
       params(
         value: T::Hash[T.untyped, T.untyped],
-        blk: T.proc.bind(PostTagRelation).params(arg: PostTagRelation).void
-      ).returns(PostTagRelation)
+        blk: T.nilable(T.proc.bind(::Tag).params(arg: ::Tag).void)
+      ).returns(::Tag)
     end
     def create_tag!(value = {}, &blk); end
 
-    sig { returns(PostTagRelation) }
+    sig { returns(::Post) }
+    def post; end
+
+    sig { params(value: ::Post).returns(T.untyped) }
+    def post=(value); end
+
+    sig { returns(::Post) }
+    def reload_post; end
+
+    sig { returns(::Tag) }
     def reload_tag; end
 
-    sig { params(value: PostTagRelation).returns(PostTagRelation) }
+    sig { returns(::Tag) }
+    def tag; end
+
+    sig { params(value: ::Tag).returns(T.untyped) }
     def tag=(value); end
   end
 

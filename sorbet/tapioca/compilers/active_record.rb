@@ -20,6 +20,7 @@ module Tapioca
 
       ACTIVERECORD_RELATION_NAME = 'ActiveRecord_Relation'
       GENERATED_RELATION_METHODS_NAME = 'GeneratedRelationMethods'
+      ACTIVERECORD_ASSOCIATIONS_COLLECTIONPROXY = 'ActiveRecord_Associations_CollectionProxy'
 
       ConstantType = type_member {{ fixed: ::T.class_of(::ActiveRecord::Base) }}
 
@@ -39,16 +40,32 @@ module Tapioca
         "T.any(#{types.join(', ')})"
       end
 
+      sig { params(type: ::String).returns(::String) }
+      def fully_qualified_class_name(type)
+        type.start_with?('::') ? type : "::#{type}"
+      end
+      alias fqcn fully_qualified_class_name
+
+      sig { params(version: ::String).returns(T::Boolean) }
+      def ar_gteq(version)
+          major, minor, tiny, _pre = version.split('.').map(&:to_i)
+          major = T.must(major)
+          minor = minor || 0
+          tiny = tiny || 0
+
+          (::ActiveRecord::VERSION::MAJOR >= major) && (::ActiveRecord::VERSION::MINOR >= minor) && (::ActiveRecord::VERSION::TINY >= tiny)
+        end
+
+      sig { params(activerecord_model: T.class_of(::ActiveRecord::Base)).returns(::String) }
       def generate_primary_key_type(activerecord_model)
         attribute_types = activerecord_model.attribute_types
-        if activerecord_model.composite_primary_key?
+        if ar_gteq('7') && activerecord_model.composite_primary_key?
           types = activerecord_model.primary_key.map { |pk| type_for_activerecord_value(attribute_types[pk]) }
           "[#{types.join(', ')}]"
         else
           type_for_activerecord_value(attribute_types[activerecord_model.primary_key])
         end
       end
-
 
       sig { override.returns(::T::Enumerable[Module]) }
       def self.gather_constants
@@ -82,7 +99,8 @@ module Tapioca
           pk_type = generate_primary_key_type(activerecord_model)
           puts "pk_type = #{pk_type}"
 
-          populate_querying_class_method(rbi_scope)
+          populate_scope_methods(rbi_scope, activerecord_model)
+          populate_querying_class_methods(rbi_scope)
           populate_persistent_class_methods(rbi_scope)
 
           create_include_generated_attribute_methods_module(rbi_scope, activerecord_model)
@@ -99,9 +117,39 @@ module Tapioca
         end
       end
 
+      # sorbet-rails-0.7.34/lib/sorbet-rails/model_plugins/active_record_named_scope.rb
+      sig { params(rbi_scope: ::RBI::Scope, activerecord_model: ConstantType).void }
+      def populate_scope_methods(rbi_scope, activerecord_model)
+        model_name = rbi_scope.fully_qualified_name
+
+        # Named scope methods are dynamically defined by the `scope` method so their
+        # source_location is `lib/active_record/scoping/named.rb`. So we find scopes
+        # by two criteria:
+        # - they are defined in 'activerecord/lib/active_record/scoping/named.rb'
+        # - they are not one of the methods actually defined in that file's source.
+        # See: https://github.com/rails/rails/blob/master/activerecord/lib/active_record/scoping/named.rb
+        non_dynamic_methods = (
+          ::ActiveRecord::Scoping::Named::ClassMethods.instance_methods +
+          ::ActiveRecord::Scoping::Named::ClassMethods.protected_instance_methods +
+          ::ActiveRecord::Scoping::Named::ClassMethods.private_instance_methods
+        )
+
+        (activerecord_model.methods - non_dynamic_methods).sort.each do |method_name|
+          next unless method_name.to_s.match(/^[A-z][A-z0-9_]*[!?=]?$/)
+
+          method_obj = activerecord_model.method(method_name)
+          next unless method_obj.present? && method_obj.source_location.present?
+
+          source_file = method_obj.source_location[0]
+          next unless source_file.include?('lib/active_record/scoping/named.rb')
+
+          rbi_scope.create_method(method_name.to_s, parameters: [create_rest_param('args', type: T_UNTYPED)], return_type: "#{model_name}::#{ACTIVERECORD_RELATION_NAME}", class_method: true)
+        end
+      end
+
       # activerecord-7.1.1/lib/active_record/querying.rb
       sig { params(rbi_scope: ::RBI::Scope).void }
-      def populate_querying_class_method(rbi_scope)
+      def populate_querying_class_methods(rbi_scope)
         model_name = rbi_scope.fully_qualified_name
 
         # activerecord-7.1.1/lib/active_record/relation/finder_methods.rb
@@ -245,22 +293,24 @@ module Tapioca
         # activerecord-7.1.1/lib/active_record/relation/calculations.rb
         str_symbol = as_any('::String', '::Symbol')
         rbi_scope.create_method('count', parameters: [create_opt_param('column_name', type: as_nilable_type(str_symbol), default: 'nil')], return_type: '::Integer', class_method: true)
-        rbi_scope.create_method('async_count', parameters: [create_opt_param('column_name', type: as_nilable_type(str_symbol), default: 'nil')], return_type: '::ActiveRecord::Promise', class_method: true)
         rbi_scope.create_method('average', parameters: [create_param('column_name', type: str_symbol)], return_type: T_UNTYPED, class_method: true)
-        rbi_scope.create_method('async_average', parameters: [create_param('column_name', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
         rbi_scope.create_method('minimum', parameters: [create_param('column_name', type: str_symbol)], return_type: T_UNTYPED, class_method: true)
-        rbi_scope.create_method('async_minimum', parameters: [create_param('column_name', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
         rbi_scope.create_method('maximum', parameters: [create_param('column_name', type: str_symbol)], return_type: T_UNTYPED, class_method: true)
-        rbi_scope.create_method('async_maximum', parameters: [create_param('column_name', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
         rbi_scope.create_method('sum', parameters: [create_opt_param('initial_value_or_column', type: as_any('::String', '::Symbol', '::Integer'), default: '0')], return_type: T_UNTYPED, class_method: true)
-        rbi_scope.create_method('async_sum', parameters: [create_opt_param('initial_value_or_column', type: as_any('::String', '::Symbol', '::Integer'), default: '0')], return_type: '::ActiveRecord::Promise', class_method: true)
         rbi_scope.create_method('calculate', parameters: [create_param('operation', type: '::Symbol'), create_param('column_name', type: as_nilable_type(str_symbol))], return_type: T_UNTYPED, class_method: true)
         rbi_scope.create_method('pluck', parameters: [create_rest_param('column_names', type: str_symbol)], return_type: as_array(T_UNTYPED), class_method: true)
-        rbi_scope.create_method('async_pluck', parameters: [create_rest_param('column_names', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
         rbi_scope.create_method('pick', parameters: [create_rest_param('column_names', type: str_symbol)], return_type: T_UNTYPED, class_method: true)
-        rbi_scope.create_method('async_pick', parameters: [create_rest_param('column_names', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
         rbi_scope.create_method('ids', return_type: as_array(T_UNTYPED), class_method: true)
-        rbi_scope.create_method('async_ids', return_type: '::ActiveRecord::Promise', class_method: true)
+        if ar_gteq('7.1')
+          rbi_scope.create_method('async_count', parameters: [create_opt_param('column_name', type: as_nilable_type(str_symbol), default: 'nil')], return_type: '::ActiveRecord::Promise', class_method: true)
+          rbi_scope.create_method('async_average', parameters: [create_param('column_name', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
+          rbi_scope.create_method('async_minimum', parameters: [create_param('column_name', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
+          rbi_scope.create_method('async_maximum', parameters: [create_param('column_name', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
+          rbi_scope.create_method('async_sum', parameters: [create_opt_param('initial_value_or_column', type: as_any('::String', '::Symbol', '::Integer'), default: '0')], return_type: '::ActiveRecord::Promise', class_method: true)
+          rbi_scope.create_method('async_pluck', parameters: [create_rest_param('column_names', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
+          rbi_scope.create_method('async_pick', parameters: [create_rest_param('column_names', type: str_symbol)], return_type: '::ActiveRecord::Promise', class_method: true)
+          rbi_scope.create_method('async_ids', return_type: '::ActiveRecord::Promise', class_method: true)
+        end
 
         # activerecord-7.1.1/lib/active_record/relation/spawn_methods.rb
         rbi_scope.create_method('merge', parameters: [create_param('other', type: '::ActiveRecord::Relation'), create_rest_param('rest', type: '::ActiveRecord::Relation')], return_type: relation_type, class_method: true)
@@ -279,19 +329,21 @@ module Tapioca
           return_type: "T::Array[#{model_name}]",
           class_method: true,
         )
-        rbi_scope.create_method(
-          'async_find_by_sql',
-          parameters: [
-            create_param('sql', type: T_UNTYPED),
-            create_opt_param('binds', type: T_UNTYPED, default: '[]'),
-            create_kw_opt_param('preparable', type: as_nilable_type(T_BOOLEAN), default: 'nil'),
-            create_block_param('block', type: T_UNTYPED),
-          ],
-          return_type: '::ActiveRecord::Promise',
-          class_method: true,
-        )
         rbi_scope.create_method('count_by_sql', parameters: [create_param('sql', type: 'String')], return_type: '::Integer', class_method: true)
-        rbi_scope.create_method('async_count_by_sql', parameters: [create_param('sql', type: 'String')], return_type: '::ActiveRecord::Promise', class_method: true)
+        if ar_gteq('7.1')
+          rbi_scope.create_method(
+            'async_find_by_sql',
+            parameters: [
+              create_param('sql', type: T_UNTYPED),
+              create_opt_param('binds', type: T_UNTYPED, default: '[]'),
+              create_kw_opt_param('preparable', type: as_nilable_type(T_BOOLEAN), default: 'nil'),
+              create_block_param('block', type: T_UNTYPED),
+            ],
+            return_type: '::ActiveRecord::Promise',
+            class_method: true,
+          )
+          rbi_scope.create_method('async_count_by_sql', parameters: [create_param('sql', type: 'String')], return_type: '::ActiveRecord::Promise', class_method: true)
+        end
       end
 
       # module Post::GeneratedAttributeMethods
@@ -307,7 +359,7 @@ module Tapioca
         # @TODO attribute で宣言された動的カラム
         attributes_to_define_after_schema_loads = activerecord_model.attributes_to_define_after_schema_loads
 
-        if activerecord_model.composite_primary_key?
+        if ar_gteq('7') && activerecord_model.composite_primary_key?
           generated_attribute_methods.create_method('id', return_type: generate_primary_key_type(activerecord_model))
         end
 
@@ -385,68 +437,69 @@ module Tapioca
       # module Post::GeneratedAssociationMethods
       sig { params(rbi_scope: ::RBI::Scope, activerecord_model: ConstantType).void }
       def create_include_generated_association_methods_module(rbi_scope, activerecord_model)
-        model_name = rbi_scope.fully_qualified_name
-        generated_association_methods = rbi_scope.create_module("#{model_name}::GeneratedAssociationMethods")
-        rbi_scope.create_include("#{model_name}::GeneratedAssociationMethods")
-        activerecord_associations_collection_proxy_name = "#{model_name}::ActiveRecord_Associations_CollectionProxy"
+        generated_association_methods_module = rbi_scope.create_module("#{rbi_scope.fully_qualified_name}::GeneratedAssociationMethods")
+        rbi_scope.create_include(generated_association_methods_module.fully_qualified_name)
 
+        # '::Post'
+        model_class_name = fqcn(activerecord_model.name.to_s)
         activerecord_model.reflections.each do |association_name, reflection|
-          optional = reflection.options[:optional]
-          reflection_name = reflection.name
-          original_reflection_type = reflection.active_record.name
-          reflection_type = optional ? as_nilable_type(original_reflection_type) : original_reflection_type
+          nilable = reflection.options[:optional] || reflection.is_a?(::ActiveRecord::Reflection::HasOneReflection) || reflection.is_a?(::ActiveRecord::Reflection::ThroughReflection)
+
+          # '::Author'
+          original_association_type = fqcn(reflection.class_name)
+          # 'T.nilable(::Author)'
+          association_type = nilable ? as_nilable_type(original_association_type) : original_association_type
+
+          activerecord_associations_collection_proxy_name = "#{original_association_type}::#{ACTIVERECORD_ASSOCIATIONS_COLLECTIONPROXY}"
+
+          association_class = ::Object.const_get(reflection.class_name)
+          pk_type = generate_primary_key_type(association_class)
 
           if reflection.collection?
-            # @TODO xxx_ids, xxx_ids=を型付け
-            # if reflection.foreign_key
-            #   reflection.active_record.columns_hash.fetch(reflection.foreign_key)
-            # else
-            #   reflection.active_record.columns_hash.fetch(reflection.foreign_key)
-            # end
             # %s
-            generated_association_methods.create_method(reflection_name, return_type: activerecord_associations_collection_proxy_name)
+            generated_association_methods_module.create_method(association_name, return_type: activerecord_associations_collection_proxy_name)
             # %s=
-            generated_association_methods.create_method("#{reflection_name}=", parameters: [create_param('value', type: "T::Enumerable[#{original_reflection_type}]")], return_type: activerecord_associations_collection_proxy_name)
+            generated_association_methods_module.create_method("#{association_name}=", parameters: [create_param('value', type: "T::Enumerable[#{original_association_type}]")], return_type: T_UNTYPED)
             # %s_ids
-            generated_association_methods.create_method("#{reflection_name}_ids", return_type: 'T::Array[T.untyped]')
+            generated_association_methods_module.create_method("#{association_name}_ids", return_type: as_array(pk_type))
             # %s_ids=
-            generated_association_methods.create_method("#{reflection_name}_ids=", parameters: [create_param('values', type: "T::Enumerable[T.untyped]")], return_type: 'T::Array[T.untyped]')
+            generated_association_methods_module.create_method("#{association_name}_ids=", parameters: [create_param('values', type: "T::Enumerable[#{pk_type}]")], return_type: T_UNTYPED)
           else
             # %s
-            generated_association_methods.create_method(reflection_name, return_type: reflection_type)
+            generated_association_methods_module.create_method(association_name, return_type: association_type)
             # %s=
-            generated_association_methods.create_method("#{reflection_name}=", parameters: [create_param('value', type: reflection_type)], return_type: reflection_type)
+            generated_association_methods_module.create_method("#{association_name}=", parameters: [create_param('value', type: association_type)], return_type: T_UNTYPED)
             # reload_%s
-            generated_association_methods.create_method("reload_#{reflection_name}", return_type: reflection_type)
+            generated_association_methods_module.create_method("reload_#{association_name}", return_type: association_type)
 
             # [Association Extensions](https://guides.rubyonrails.org/association_basics.html#association-extensions)はサポートできず
             unless reflection.polymorphic?
               # build_%s
-              generated_association_methods.create_method(
-                "build_#{reflection_name}",
+              generated_association_methods_module.create_method(
+                "build_#{association_name}",
                 parameters: [
                   create_opt_param('value', type: 'T::Hash[T.untyped, T.untyped]', default: '{}'),
-                  create_block_param('blk', type: "T.proc.bind(#{original_reflection_type}).params(arg: #{original_reflection_type}).void"),
+                  create_block_param('blk', type: as_nilable_type("T.proc.bind(#{original_association_type}).params(arg: #{original_association_type}).void")),
                 ],
-                return_type: original_reflection_type,
+                return_type: original_association_type,
               )
               # create_%s
-              generated_association_methods.create_method(
-                "create_#{reflection_name}",
+              generated_association_methods_module.create_method(
+                "create_#{association_name}",
                 parameters: [
                   create_opt_param('value', type: 'T::Hash[T.untyped, T.untyped]', default: '{}'),
-                  create_block_param('blk', type: "T.proc.bind(#{original_reflection_type}).params(arg: #{original_reflection_type}).void"),
+                  create_block_param('blk', type: as_nilable_type("T.proc.bind(#{original_association_type}).params(arg: #{original_association_type}).void")),
                 ],
-                return_type: reflection_type,
+                return_type: association_type,
               )
               # create_%s!
-              generated_association_methods.create_method(
-                "create_#{reflection_name}!",
+              generated_association_methods_module.create_method(
+                "create_#{association_name}!",
                 parameters: [
                   create_opt_param('value', type: 'T::Hash[T.untyped, T.untyped]', default: '{}'),
-                  create_block_param('blk', type: "T.proc.bind(#{original_reflection_type}).params(arg: #{original_reflection_type}).void"),
+                  create_block_param('blk', type: as_nilable_type("T.proc.bind(#{original_association_type}).params(arg: #{original_association_type}).void")),
                 ],
-                return_type: original_reflection_type,
+                return_type: original_association_type,
               )
             end
           end
@@ -559,7 +612,7 @@ module Tapioca
       # class Post::ActiveRecord_Relation < ::ActiveRecord::Relation
       sig { params(rbi_scope: ::RBI::Scope, activerecord_model: ConstantType).void }
       def create_active_record_relation(rbi_scope, activerecord_model)
-        model_name = "::#{activerecord_model.name}"
+        model_name = fqcn(activerecord_model.name.to_s)
         ar_relation = rbi_scope.create_class(ACTIVERECORD_RELATION_NAME, superclass_name: '::ActiveRecord::Relation')
 
         ar_relation.create_include(GENERATED_RELATION_METHODS_NAME)
@@ -743,22 +796,24 @@ module Tapioca
       def populate_calculations(generated_relation_methods_module)
         # activerecord-7.1.1/lib/active_record/relation/calculations.rb
         generated_relation_methods_module.create_method('count', parameters: [create_opt_param('column_name', type: as_nilable_type(as_any('::String', '::Symbol')), default: 'nil')], return_type: '::Integer')
-        generated_relation_methods_module.create_method('async_count', parameters: [create_opt_param('column_name', type: as_nilable_type(as_any('::String', '::Symbol')), default: 'nil')], return_type: '::ActiveRecord::Promise')
         generated_relation_methods_module.create_method('average', parameters: [create_param('column_name', type: as_any('::String', '::Symbol'))], return_type: T_UNTYPED)
-        generated_relation_methods_module.create_method('async_average', parameters: [create_param('column_name', type: as_any('::String', '::Symbol'))], return_type: '::ActiveRecord::Promise')
         generated_relation_methods_module.create_method('minimum', parameters: [create_param('column_name', type: as_any('::String', '::Symbol'))], return_type: T_UNTYPED)
-        generated_relation_methods_module.create_method('async_minimum', parameters: [create_param('column_name', type: as_any('::String', '::Symbol'))], return_type: '::ActiveRecord::Promise')
         generated_relation_methods_module.create_method('maximum', parameters: [create_param('column_name', type: as_any('::String', '::Symbol'))], return_type: T_UNTYPED)
-        generated_relation_methods_module.create_method('async_maximum', parameters: [create_param('column_name', type: as_any('::String', '::Symbol'))], return_type: '::ActiveRecord::Promise')
         generated_relation_methods_module.create_method('sum', parameters: [create_opt_param('initial_value_or_column', type: as_any('::String', '::Symbol', '::Integer'), default: '0')], return_type: T_UNTYPED)
-        generated_relation_methods_module.create_method('async_sum', parameters: [create_opt_param('initial_value_or_column', type: as_any('::String', '::Symbol', '::Integer'), default: '0')], return_type: '::ActiveRecord::Promise')
         generated_relation_methods_module.create_method('calculate', parameters: [create_param('operation', type: '::Symbol'), create_param('column_name', type: as_nilable_type(as_any('::String', '::Symbol')))], return_type: T_UNTYPED)
         generated_relation_methods_module.create_method('pluck', parameters: [create_rest_param('column_names', type: as_any('::Symbol', '::String'))], return_type: as_array(T_UNTYPED))
-        generated_relation_methods_module.create_method('async_pluck', parameters: [create_rest_param('column_names', type: as_any('::Symbol', '::String'))], return_type: '::ActiveRecord::Promise')
         generated_relation_methods_module.create_method('pick', parameters: [create_rest_param('column_names', type: as_any('::Symbol', '::String'))], return_type: T_UNTYPED)
-        generated_relation_methods_module.create_method('async_pick', parameters: [create_rest_param('column_names', type: as_any('::Symbol', '::String'))], return_type: '::ActiveRecord::Promise')
         generated_relation_methods_module.create_method('ids', return_type: as_array(T_UNTYPED))
-        generated_relation_methods_module.create_method('async_ids', return_type: '::ActiveRecord::Promise')
+        if ar_gteq('7.1')
+          generated_relation_methods_module.create_method('async_count', parameters: [create_opt_param('column_name', type: as_nilable_type(as_any('::String', '::Symbol')), default: 'nil')], return_type: '::ActiveRecord::Promise')
+          generated_relation_methods_module.create_method('async_average', parameters: [create_param('column_name', type: as_any('::String', '::Symbol'))], return_type: '::ActiveRecord::Promise')
+          generated_relation_methods_module.create_method('async_minimum', parameters: [create_param('column_name', type: as_any('::String', '::Symbol'))], return_type: '::ActiveRecord::Promise')
+          generated_relation_methods_module.create_method('async_maximum', parameters: [create_param('column_name', type: as_any('::String', '::Symbol'))], return_type: '::ActiveRecord::Promise')
+          generated_relation_methods_module.create_method('async_sum', parameters: [create_opt_param('initial_value_or_column', type: as_any('::String', '::Symbol', '::Integer'), default: '0')], return_type: '::ActiveRecord::Promise')
+          generated_relation_methods_module.create_method('async_pluck', parameters: [create_rest_param('column_names', type: as_any('::Symbol', '::String'))], return_type: '::ActiveRecord::Promise')
+          generated_relation_methods_module.create_method('async_pick', parameters: [create_rest_param('column_names', type: as_any('::Symbol', '::String'))], return_type: '::ActiveRecord::Promise')
+          generated_relation_methods_module.create_method('async_ids', return_type: '::ActiveRecord::Promise')
+        end
       end
 
       # [spawn](http://api.rubyonrails.org/classes/ActiveRecord/SpawnMethods.html)

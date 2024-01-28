@@ -14,6 +14,17 @@
 class Author < ApplicationRecord
   has_many :posts
 
+  scope :id_1, -> { where(id: 1) }
+  scope :id_n, ->(n) { where(id: n) }
+
+  def self.test_scope
+    test_only!
+
+    # @TODO parametersの定義 AST見ないと無理
+    T.assert_type!(id_1, ::Author::ActiveRecord_Relation)
+    T.assert_type!(id_n, ::Author::ActiveRecord_Relation)
+  end
+
   def test_generated_attribute_methods
     test_only!
 
@@ -29,8 +40,8 @@ class Author < ApplicationRecord
   def test_has_many_associations
     test_only!
 
-    T.assert_type!(posts, ::Author::ActiveRecord_Associations_CollectionProxy)
-    T.assert_type!(posts.where(id: 0), ::Author::ActiveRecord_Relation)
+    T.assert_type!(posts, ::Post::ActiveRecord_Associations_CollectionProxy)
+    T.assert_type!(posts.where(id: 0), ::Post::ActiveRecord_Relation)
   end
 
   def test_relation_methods

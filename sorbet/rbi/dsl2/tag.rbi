@@ -557,28 +557,28 @@ class Tag
   end
 
   module ::Tag::GeneratedAssociationMethods
-    sig { returns(::Tag::ActiveRecord_Associations_CollectionProxy) }
+    sig { returns(::PostTagRelation::ActiveRecord_Associations_CollectionProxy) }
     def post_tag_relations; end
 
-    sig { params(value: T::Enumerable[Tag]).returns(::Tag::ActiveRecord_Associations_CollectionProxy) }
+    sig { params(value: T::Enumerable[::PostTagRelation]).returns(T.untyped) }
     def post_tag_relations=(value); end
 
-    sig { returns(T::Array[T.untyped]) }
+    sig { returns(T::Array[[::Integer, ::Integer]]) }
     def post_tag_relations_ids; end
 
-    sig { params(values: T::Enumerable[T.untyped]).returns(T::Array[T.untyped]) }
+    sig { params(values: T::Enumerable[[::Integer, ::Integer]]).returns(T.untyped) }
     def post_tag_relations_ids=(values); end
 
-    sig { returns(::Tag::ActiveRecord_Associations_CollectionProxy) }
+    sig { returns(::Post::ActiveRecord_Associations_CollectionProxy) }
     def posts; end
 
-    sig { params(value: T::Enumerable[Tag]).returns(::Tag::ActiveRecord_Associations_CollectionProxy) }
+    sig { params(value: T::Enumerable[::Post]).returns(T.untyped) }
     def posts=(value); end
 
-    sig { returns(T::Array[T.untyped]) }
+    sig { returns(T::Array[::Integer]) }
     def posts_ids; end
 
-    sig { params(values: T::Enumerable[T.untyped]).returns(T::Array[T.untyped]) }
+    sig { params(values: T::Enumerable[::Integer]).returns(T.untyped) }
     def posts_ids=(values); end
   end
 

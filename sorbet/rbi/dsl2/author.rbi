@@ -240,6 +240,12 @@ class Author
     sig { params(opts: ::String, rest: T.untyped).returns(::Author::ActiveRecord_Relation) }
     def having(opts, *rest); end
 
+    sig { params(args: T.untyped).returns(::Author::ActiveRecord_Relation) }
+    def id_1(*args); end
+
+    sig { params(args: T.untyped).returns(::Author::ActiveRecord_Relation) }
+    def id_n(*args); end
+
     sig { returns(T::Array[T.untyped]) }
     def ids; end
 
@@ -557,16 +563,16 @@ class Author
   end
 
   module ::Author::GeneratedAssociationMethods
-    sig { returns(::Author::ActiveRecord_Associations_CollectionProxy) }
+    sig { returns(::Post::ActiveRecord_Associations_CollectionProxy) }
     def posts; end
 
-    sig { params(value: T::Enumerable[Author]).returns(::Author::ActiveRecord_Associations_CollectionProxy) }
+    sig { params(value: T::Enumerable[::Post]).returns(T.untyped) }
     def posts=(value); end
 
-    sig { returns(T::Array[T.untyped]) }
+    sig { returns(T::Array[::Integer]) }
     def posts_ids; end
 
-    sig { params(values: T::Enumerable[T.untyped]).returns(T::Array[T.untyped]) }
+    sig { params(values: T::Enumerable[::Integer]).returns(T.untyped) }
     def posts_ids=(values); end
   end
 
