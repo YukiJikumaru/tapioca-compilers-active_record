@@ -11,6 +11,17 @@ class Post < ApplicationRecord
 
   scope :id_n, ->(n) { where(id: n) }
 
+  def test_select!
+    test_only!
+
+    # T.assert_type!(::Post.where(id: 0).select(:id), ::Post::ActiveRecord_Relation)
+    relation = ::Post.where(id: 0).select(:id)
+    T.assert_type!(::Post.where(id: 0).select_columns(:id), ::Post::ActiveRecord_Relation)
+    # T.assert_type!(::Post.where(id: 0).select { |record| record.id == 1 }, T::Array[::Post])
+    posts = ::Post.where(id: 0).select { |record| record.id == 1 }
+    T.assert_type!(::Post.where(id: 0).filter { |record| record.id == 1 }, T::Array[::Post])
+  end
+
   def test_attribute
     test_only!
     # T.assert_type!(price_in_cents, ::Integer)
@@ -53,6 +64,7 @@ class Post < ApplicationRecord
     T.assert_type!(post_tag_relations, ::PostTagRelation::ActiveRecord_Associations_CollectionProxy)
     T.assert_type!(post_tag_relations.where(), ::PostTagRelation::ActiveRecord_Relation)
     T.assert_type!(post_tag_relations.where().to_a, T::Array[::PostTagRelation])
+    T.assert_type!(post_tag_relation_ids, T::Array[[::Integer, ::Integer]])
 
     self.post_tag_relations = [::PostTagRelation.new]
     self.post_tag_relations << ::PostTagRelation.new
@@ -63,6 +75,7 @@ class Post < ApplicationRecord
     T.assert_type!(tags, ::Tag::ActiveRecord_Associations_CollectionProxy)
     T.assert_type!(tags.where(), ::Tag::ActiveRecord_Relation)
     T.assert_type!(tags.where().to_a, T::Array[::Tag])
+    T.assert_type!(tag_ids, T::Array[::Integer])
 
     self.tags = [::Tag.new]
     self.tags << ::PostTagRelation.new

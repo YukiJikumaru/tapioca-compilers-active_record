@@ -2,6 +2,15 @@
 
 begin
   require 'active_record'
+
+  extenstion = Module.new do
+    def select_columns(*args)
+      T.unsafe(self).select(*args)
+    end
+  end
+
+  ::ActiveRecord::Base.extend(extenstion)
+  ::ActiveRecord::Relation.include(extenstion)
 rescue LoadError
   return
 end
@@ -471,9 +480,9 @@ module Tapioca
             # %s=
             generated_association_methods_module.create_method("#{association_name}=", parameters: [create_param('value', type: "T::Enumerable[#{original_association_type}]")], return_type: T_UNTYPED)
             # %s_ids
-            generated_association_methods_module.create_method("#{association_name}_ids", return_type: as_array(pk_type))
+            generated_association_methods_module.create_method("#{association_name.singularize}_ids", return_type: as_array(pk_type))
             # %s_ids=
-            generated_association_methods_module.create_method("#{association_name}_ids=", parameters: [create_param('values', type: "T::Enumerable[#{pk_type}]")], return_type: T_UNTYPED)
+            generated_association_methods_module.create_method("#{association_name.singularize}_ids=", parameters: [create_param('values', type: "T::Enumerable[#{pk_type}]")], return_type: T_UNTYPED)
           else
             # %s
             generated_association_methods_module.create_method(association_name, return_type: association_type)
@@ -863,7 +872,23 @@ module Tapioca
         generated_relation_methods_module.create_method('preload', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: ACTIVERECORD_RELATION_NAME)
         generated_relation_methods_module.create_method('extract_associated', parameters: [create_param('association', type: '::Symbol')], return_type: as_array(T_UNTYPED))
         generated_relation_methods_module.create_method('references', parameters: [create_param('arg', type: common_type), create_rest_param('table_names', type: common_type)], return_type: ACTIVERECORD_RELATION_NAME)
-        generated_relation_methods_module.create_method('select', parameters: [create_param('field', type: common_type), create_rest_param('fields', type: common_type)], return_type: ACTIVERECORD_RELATION_NAME)
+        msg = <<~MSG
+          If you need a typed return, use `select_columns(*columns)` instead.
+
+          `Model.where(id: 1).select` and `Model.associations.select` have 2 overload signatures.
+          1. [Enumerable#select](https://docs.ruby-lang.org/ja/latest/method/Enumerable/i/filter.html)
+          2. [ActiveRecord::QueryMethods#select](https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html#method-i-select)
+
+          Unfortunately sorbet does not support overload, we gave up to this bad typed signature.
+        MSG
+        # Thanks https://github.com/chanzuckerberg/sorbet-rails/blob/v0.7.5/lib/sorbet-rails/rails_mixins/custom_finder_methods.rb
+        generated_relation_methods_module.create_method(
+          'select',
+          parameters: [create_rest_param('field', type: T_UNTYPED)],
+          return_type: T_UNTYPED,
+          comments: [RBI::Comment.new(msg)],
+        )
+        generated_relation_methods_module.create_method('select_columns', parameters: [create_param('field', type: common_type), create_rest_param('fields', type: common_type)], return_type: ACTIVERECORD_RELATION_NAME)
         generated_relation_methods_module.create_method('with', parameters: [create_param('arg', type: 'T::Hash[T.untyped, T.untyped]'), create_rest_param('args', type: 'T::Hash[T.untyped, T.untyped]')], return_type: ACTIVERECORD_RELATION_NAME)
         generated_relation_methods_module.create_method('reselect', parameters: [create_param('arg', type: common_type), create_rest_param('fields', type: common_type)], return_type: ACTIVERECORD_RELATION_NAME)
         generated_relation_methods_module.create_method('group', parameters: [create_param('arg', type: common_type), create_rest_param('args', type: common_type)], return_type: ACTIVERECORD_RELATION_NAME)

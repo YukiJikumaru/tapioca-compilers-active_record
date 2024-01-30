@@ -590,32 +590,32 @@ class Post
     end
     def create_author!(value = {}, &blk); end
 
+    sig { returns(T::Array[[::Integer, ::Integer]]) }
+    def post_tag_relation_ids; end
+
+    sig { params(values: T::Enumerable[[::Integer, ::Integer]]).returns(T.untyped) }
+    def post_tag_relation_ids=(values); end
+
     sig { returns(::PostTagRelation::ActiveRecord_Associations_CollectionProxy) }
     def post_tag_relations; end
 
     sig { params(value: T::Enumerable[::PostTagRelation]).returns(T.untyped) }
     def post_tag_relations=(value); end
 
-    sig { returns(T::Array[[::Integer, ::Integer]]) }
-    def post_tag_relations_ids; end
-
-    sig { params(values: T::Enumerable[[::Integer, ::Integer]]).returns(T.untyped) }
-    def post_tag_relations_ids=(values); end
-
     sig { returns(T.nilable(::Author)) }
     def reload_author; end
+
+    sig { returns(T::Array[::Integer]) }
+    def tag_ids; end
+
+    sig { params(values: T::Enumerable[::Integer]).returns(T.untyped) }
+    def tag_ids=(values); end
 
     sig { returns(::Tag::ActiveRecord_Associations_CollectionProxy) }
     def tags; end
 
     sig { params(value: T::Enumerable[::Tag]).returns(T.untyped) }
     def tags=(value); end
-
-    sig { returns(T::Array[::Integer]) }
-    def tags_ids; end
-
-    sig { params(values: T::Enumerable[::Integer]).returns(T.untyped) }
-    def tags_ids=(values); end
   end
 
   module ::Post::GeneratedAttributeMethods
@@ -1487,13 +1487,23 @@ class Post
     sig { returns(::Post) }
     def second_to_last!; end
 
+    # If you need a typed return, use `select_columns(*columns)` instead.
+    #
+    # `Model.where(id: 1).select` and `Model.associations.select` have 2 overload signatures.
+    # 1. [Enumerable#select](https://docs.ruby-lang.org/ja/latest/method/Enumerable/i/filter.html)
+    # 2. [ActiveRecord::QueryMethods#select](https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html#method-i-select)
+    #
+    # Unfortunately sorbet does not support overload, we gave up to this bad typed signature.
+    sig { params(field: T.untyped).returns(T.untyped) }
+    def select(*field); end
+
     sig do
       params(
         field: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
         fields: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
-    def select(field, *fields); end
+    def select_columns(field, *fields); end
 
     sig { returns(::Post) }
     def sole; end

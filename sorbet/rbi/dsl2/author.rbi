@@ -563,17 +563,17 @@ class Author
   end
 
   module ::Author::GeneratedAssociationMethods
+    sig { returns(T::Array[::Integer]) }
+    def post_ids; end
+
+    sig { params(values: T::Enumerable[::Integer]).returns(T.untyped) }
+    def post_ids=(values); end
+
     sig { returns(::Post::ActiveRecord_Associations_CollectionProxy) }
     def posts; end
 
     sig { params(value: T::Enumerable[::Post]).returns(T.untyped) }
     def posts=(value); end
-
-    sig { returns(T::Array[::Integer]) }
-    def posts_ids; end
-
-    sig { params(values: T::Enumerable[::Integer]).returns(T.untyped) }
-    def posts_ids=(values); end
   end
 
   module ::Author::GeneratedAttributeMethods
@@ -1457,13 +1457,23 @@ class Author
     sig { returns(::Author) }
     def second_to_last!; end
 
+    # If you need a typed return, use `select_columns(*columns)` instead.
+    #
+    # `Model.where(id: 1).select` and `Model.associations.select` have 2 overload signatures.
+    # 1. [Enumerable#select](https://docs.ruby-lang.org/ja/latest/method/Enumerable/i/filter.html)
+    # 2. [ActiveRecord::QueryMethods#select](https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html#method-i-select)
+    #
+    # Unfortunately sorbet does not support overload, we gave up to this bad typed signature.
+    sig { params(field: T.untyped).returns(T.untyped) }
+    def select(*field); end
+
     sig do
       params(
         field: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped]),
         fields: T.any(::String, ::Symbol, T::Hash[T.untyped, T.untyped])
       ).returns(ActiveRecord_Relation)
     end
-    def select(field, *fields); end
+    def select_columns(field, *fields); end
 
     sig { returns(::Author) }
     def sole; end
