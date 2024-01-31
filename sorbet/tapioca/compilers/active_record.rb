@@ -929,28 +929,84 @@ module Tapioca
       sig { params(column_type: T.untyped).returns(String) }
       def type_for_activerecord_value(column_type)
         case column_type
-        when ::ActiveRecord::Type::Integer
-          "::Integer"
-        when ::ActiveRecord::Type::String
-          "::String"
-        when ::ActiveRecord::Type::Date
-          "::Date"
-        when ::ActiveRecord::Type::Decimal
-          "::BigDecimal"
+        when ::ActiveRecord::Type::Integer, ::ActiveRecord::Type::BigInteger, ::ActiveRecord::Type::UnsignedInteger
+          '::Integer'
         when ::ActiveRecord::Type::Float
-          "::Float"
+          '::Float'
+        when ::ActiveRecord::Type::Decimal, ::ActiveRecord::Type::DecimalWithoutScale
+          '::BigDecimal'
+        when ::ActiveRecord::Type::String, ::ActiveRecord::Type::Text, ::ActiveRecord::Type::ImmutableString
+          '::String'
         when ::ActiveRecord::Type::Boolean
-          "T::Boolean"
-        when ::ActiveRecord::Type::DateTime, ::ActiveRecord::Type::Time
-          "::Time"
+          'T::Boolean'
+        when ::ActiveRecord::Type::Date
+          '::Date'
+        when ::ActiveRecord::Type::Time, ::ActiveRecord::Type::DateTime
+          '::Time'
         when ::ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
-          "::ActiveSupport::TimeWithZone"
+          '::ActiveSupport::TimeWithZone'
         when ::ActiveRecord::Enum::EnumType
-          "::String"
+          '::String'
         else
-          "T.untyped"
+          # ::ActiveRecord::Type::AdapterSpecificRegistry
+          # ::ActiveRecord::Type::Binary
+          # ::ActiveRecord::Type::DecorationRegistration
+          # ::ActiveRecord::Type::HashLookupTypeMap
+          # ::ActiveRecord::Type::Internal
+          # ::ActiveRecord::Type::Json
+          # ::ActiveRecord::Type::Registration
+          # ::ActiveRecord::Type::Serialized
+          # ::ActiveRecord::Type::TypeMap
+          # ::ActiveRecord::Type::Value
+          #   or
+          # ActiveRecord::Type.register(:your_custom_type, YourCustomTypeClass)
+          'T.untyped'
         end
       end
+
+      # sig { params(column_type: ::String).returns(String) }
+      # def mysql_type_for_activerecord_value(column_type)
+      #   # activerecord-6.1.4.4/lib/active_recordconnection_adapters/abstrac_mysql_adapter.rb
+      #   case column_type
+      #   when '::Integer'
+      #     '::Integer'
+      #   when '::Float'
+      #     '::Float'
+      #   when '::BigDecimal'
+      #     '::BigDecimal'
+      #   when '::String'
+      #     '::String'
+      #   when '::String'
+      #     'T::Boolean'
+      #   when '::String'
+      #     '::Date'
+      #   when '::String'
+      #     '::Time'
+      #   when '::String'
+      #     '::ActiveSupport::TimeWithZone'
+      #   else
+      #     'T.untyped'
+      #   end
+      #   # /^bigint/i
+      #   # /^bit/i
+      #   # /^double/i
+      #   # /^float/i
+      #   # /^int/i
+      #   # /^mediumint/i
+      #   # /^smallint/i
+      #   # /^tinyint/i
+      #   # /^tinyint\(1\)/i
+      #   # /^year/i
+      #   # /blob/i
+      #   # /char/i
+      #   # /longblob/i
+      #   # /longtext/i
+      #   # /mediumblob/i
+      #   # /mediumtext/i
+      #   # /text/i
+      #   # /tinyblob/i
+      #   # /tinytext/i
+      # end
     end
   end
 end
